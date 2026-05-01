@@ -8,8 +8,12 @@ export interface PageUIComponentProps {
 export interface PageActionsVisibility {
   [key: string]: boolean;
   isUploadVisible: boolean;
+  isCreateVisible: boolean;
+  isEditVisible: boolean;
   isDeleteVisible: boolean;
-  isCopyPositionsVisible: boolean;
+  isGroupVisible: boolean;
+  isExportVisible: boolean;
+  isClearVisible: boolean;
 }
 
 export interface UsePageActionsVisibilityProps {

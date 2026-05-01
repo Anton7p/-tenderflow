@@ -91,6 +91,9 @@ let UpdDocxGeneratorAdapter = class UpdDocxGeneratorAdapter {
             totalVat: acc.totalVat + row.taxAmount,
             totalWithVat: acc.totalWithVat + row.totalWithTax,
         }), { totalWithoutVat: 0, totalVat: 0, totalWithVat: 0 });
+        templateFields.item_total_amount_without_vat = (0, upd_docx_generator_helpers_1.formatMoney)(totals.totalWithoutVat);
+        templateFields.item_total_vat_amount = (0, upd_docx_generator_helpers_1.formatMoney)(totals.totalVat);
+        templateFields.item_total_with_vat = (0, upd_docx_generator_helpers_1.formatMoney)(totals.totalWithVat);
         const itemRows = (payload.tableData.length ? payload.tableData : [null]).map((row, index) => ({
             item_code: row?.productCode?.toString() ?? '',
             item_line_no: row ? String(row.index || index + 1) : '',

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Modal as AntModal } from 'antd';
 import styles from './modal.module.css';
 
@@ -7,9 +8,24 @@ interface ModalProps {
   children: React.ReactNode;
   width?: number | string;
   height?: number | string;
+  maskClosable?: boolean;
+  keyboard?: boolean;
+  /** Зафиксировать размер `.ant-modal-content` (окно не растёт и не скроллится целиком). */
+  contentStyle?: CSSProperties;
 }
 
-export function Modal({ open, onClose, children, width = '1200px', height = '700px' }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  children,
+  width = '1200px',
+  height = '700px',
+  maskClosable = true,
+  keyboard = true,
+  contentStyle,
+}: ModalProps) {
+  const fixedShell = Boolean(contentStyle?.height ?? contentStyle?.maxHeight);
+
   return (
     <AntModal
       open={open}
@@ -17,11 +33,28 @@ export function Modal({ open, onClose, children, width = '1200px', height = '700
       footer={null}
       width={width}
       centered
+      maskClosable={maskClosable}
+      keyboard={keyboard}
       className={styles.modal}
-      bodyStyle={{ padding: 0, minHeight: height, display: 'flex', flexDirection: 'column' }}
       style={{ top: 0 }}
       styles={{
         mask: { backgroundColor: 'rgba(0, 0, 0, 0.45)' },
+        content: {
+          padding: 0,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          ...contentStyle,
+        },
+        body: {
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          ...(fixedShell
+            ? { flex: '1 1 auto', minHeight: 0 }
+            : { minHeight: height }),
+        },
       }}
       closeIcon={false}
     >

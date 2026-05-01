@@ -1,0 +1,177 @@
+/**
+ * Панели как у формы редактирования позиции (`upload-excel-row-form`): серый фон и рамка.
+ */
+.sheet,
+.formBodyScroll > .twoCols,
+.formBodyScroll > .fullBand,
+.formBodyScroll > .signatureBand,
+.formBodyScroll > .footerIntro,
+.formBodyScroll > .footerTwoCols {
+  border: 1px solid #dbe2ea;
+  background: #f9fbfd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.formBodyScroll > * + * {
+  margin-top: 8px;
+}
+
+/** Прокрутка всего тела формы (от блока «листа» до подвала). */
+.formBodyScroll {
+  max-height: min(580px, calc(100vh - 220px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.sectionDivider {
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #eef2f6 0%, #e4e9ef 100%);
+  border: 1px solid #dbe2ea;
+  border-bottom: 1px solid #cfd7e1;
+  font-weight: 700;
+  font-size: 13px;
+  color: #2d3a47;
+  border-radius: 6px;
+}
+
+/** Первая полоса внутри `.sheet`: без двойной верхней границы с рамкой панели. */
+.sectionDividerLead {
+  border-top: none;
+  border-radius: 0;
+}
+
+.invoiceBand {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 14px 16px;
+  background: transparent;
+  border-bottom: 1px solid #dbe2ea;
+}
+
+.invoicePair {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  align-items: flex-start;
+  gap: 8px 10px;
+}
+
+.correctionPair {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  align-items: flex-start;
+  gap: 8px 10px;
+}
+
+.metaHint {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: #7a8a99;
+  margin-top: 4px;
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.col {
+  padding: 14px 16px 18px;
+  border-right: 1px solid #dbe2ea;
+  min-width: 0;
+}
+
+.col:last-child {
+  border-right: none;
+}
+
+.colHead {
+  font-weight: 700;
+  font-size: 12px;
+  color: #2d3a47;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e8ecf1;
+}
+
+.marker {
+  display: inline-block;
+  min-width: 2.25rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7c8c;
+  vertical-align: baseline;
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.labelText {
+  font-size: 12px;
+  color: #374551;
+  font-weight: 500;
+}
+
+.fullBand {
+  padding: 14px 16px;
+}
+
+.signatureBand {
+  padding: 14px 16px 18px;
+}
+
+.footerIntro {
+  padding: 12px 16px;
+}
+
+.footerTwoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.footerCol {
+  padding: 14px 16px 18px;
+  border-right: 1px solid #dbe2ea;
+  min-width: 0;
+}
+
+.footerCol:last-child {
+  border-right: none;
+}
+
+.footerColTitle {
+  font-weight: 700;
+  font-size: 12px;
+  color: #2d3a47;
+  margin-bottom: 14px;
+}
+
+.compactItem {
+  margin-bottom: 10px;
+}
+
+.compactItem :global(.ant-form-item-label) {
+  padding-bottom: 2px;
+}
+
+.compactItem :global(.ant-form-item-label > label) {
+  height: auto;
+  line-height: 1.35;
+}
+
+.compactItem :global(.ant-form-item) {
+  margin-bottom: 10px;
+}
+
+.compactItem :global(.ant-input) {
+  border-color: #cfd7e1;
+  background: #ffffff;
+}

@@ -8,16 +8,22 @@ interface UsePageActionsVisibilityProps {
 export function usePageActionsVisibility(props: UsePageActionsVisibilityProps): PageActionsVisibility {
   const { state } = props;
 
-  const hasSelectedRows = (state.selectedRowIds || []).length > 0;
-
-  const hasMultipleSelectedRows = (state.selectedRowIds || []).length > 1;
+  const selectedCount = (state.selectedRowIds || []).length;
+  const hasSelectedRows = selectedCount > 0;
+  const hasSingleSelectedRow = selectedCount === 1;
+  const hasMultipleSelectedRows = selectedCount > 1;
+  const isFileLoaded = Boolean(state.isFileLoaded);
 
   return useMemo(
     () => ({
       isUploadVisible: true,
+      isCreateVisible: isFileLoaded,
+      isEditVisible: hasSingleSelectedRow,
       isDeleteVisible: hasSelectedRows,
-      isCopyPositionsVisible: hasMultipleSelectedRows,
+      isGroupVisible: hasMultipleSelectedRows,
+      isExportVisible: isFileLoaded,
+      isClearVisible: isFileLoaded,
     }),
-    [hasSelectedRows, hasMultipleSelectedRows]
+    [hasSingleSelectedRow, hasSelectedRows, hasMultipleSelectedRows, isFileLoaded]
   );
 }

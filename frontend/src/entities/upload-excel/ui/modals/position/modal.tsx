@@ -6,6 +6,11 @@ import styles from '../upload/styles.module.css';
 
 type PositionModalMode = 'create' | 'edit';
 
+function rowToFormDefaults(row: UploadExcelRowModel) {
+  const { id: _id, ...rest } = row;
+  return rest;
+}
+
 interface PositionModalProps {
   isOpen: boolean;
   params: { mode: PositionModalMode; row?: UploadExcelRowModel } | null;
@@ -36,15 +41,18 @@ export function PositionModal(props: PositionModalProps) {
   return (
     <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
       {customTitle}
-      <div style={{ padding: '0 10px 10px' }}>
-        <UploadExcelRowForm
-          formId={formId}
-          defaultValues={params?.row}
-          onSubmit={(values) => {
-            onApply?.(values);
-          }}
-        />
-      </div>
+      {isOpen ? (
+        <div style={{ padding: '0 10px 10px' }}>
+          <UploadExcelRowForm
+            key={`${mode}-${params?.row ? `${params.row.id}-${params.row.index}` : 'new'}`}
+            formId={formId}
+            defaultValues={params?.row ? rowToFormDefaults(params.row) : undefined}
+            onSubmit={(values) => {
+              onApply?.(values);
+            }}
+          />
+        </div>
+      ) : null}
     </SharedModal>
   );
 }

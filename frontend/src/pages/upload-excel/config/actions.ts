@@ -6,8 +6,8 @@ export const actions: PageButtonActionGroup = {
   id: 'MAIN',
   buttons: [
     {
-      id: ActionsEnum.UPLOAD_EXCEL,
-      name: 'Загрузить Excel',
+      id: ActionsEnum.EXPORT_WORD,
+      name: 'Выгрузить в Word',
       type: 'primary',
     },
     {
@@ -18,11 +18,6 @@ export const actions: PageButtonActionGroup = {
     {
       id: ActionsEnum.EDIT_POSITION,
       name: 'Редактировать позицию',
-      type: 'secondary',
-    },
-    {
-      id: ActionsEnum.EXPORT_WORD,
-      name: 'Выгрузить в Word',
       type: 'secondary',
     },
     {

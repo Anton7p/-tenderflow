@@ -1,3 +1,3 @@
 export { UploadExcelPage } from './upload-excel';
-export { DocumentJournalPage } from './document-journal';
+export { PaymentAccountPage } from './payment-account';
 export { SettingsPage } from './settings';

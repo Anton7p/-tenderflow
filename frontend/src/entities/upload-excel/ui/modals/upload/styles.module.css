@@ -1,11 +1,15 @@
 .modalHeader {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   padding: 10px 14px;
   background: linear-gradient(180deg, #f6f6f6 0%, #efefef 100%);
-  border-bottom: 1px solid #C0C0C0;
-  margin: -24px -24px 12px -24px;
+  border-bottom: 1px solid #c0c0c0;
+  margin: 0 0 12px;
 }
 
 .modalTitle {
@@ -13,6 +17,7 @@
   font-weight: 600;
   color: #303030;
   letter-spacing: 0.1px;
+  min-width: 0;
 }
 
 .modalActions {

@@ -1,8 +1,20 @@
 import { useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Spin } from 'antd';
 import { Modal as SharedModal } from '@shared/ui';
 import type { CounterpartiesModel, DocxTemplateFieldsModel, FooterFieldsModel, HeaderFieldsModel } from '@entities/upload-excel/api';
-import styles from '../upload/styles.module.css';
+import uploadStyles from '../upload/styles.module.css';
+import layoutStyles from './modal-layout.module.css';
+import type { DocxFieldDef } from './export-word-field-groups';
+import {
+  FOOTER_FULL_DOCX,
+  FOOTER_LEFT_DOCX,
+  FOOTER_RIGHT_DOCX,
+  HEADER_BAND_DOCX,
+  HEADER_GOVERNMENT_DOCX,
+  HEADER_LEFT_DOCX,
+  HEADER_RIGHT_DOCX,
+  HEADER_SIGNATURE_DOCX,
+} from './export-word-field-groups';
 
 interface ExportWordModalValues {
   counterparties: CounterpartiesModel;
@@ -16,6 +28,7 @@ interface ExportWordModalProps {
   params: ExportWordModalValues | null;
   onCancel: () => void;
   onSubmit?: (values: ExportWordModalValues) => void;
+  state?: { loading?: boolean };
 }
 
 const EMPTY_COUNTERPARTIES: CounterpartiesModel = {
@@ -54,76 +67,50 @@ const EMPTY_FOOTER_FIELDS: FooterFieldsModel = {
   buyerEntityName: '',
 };
 
-const DOCX_EDITABLE_FIELDS: Array<{ key: string; label: string }> = [
-  { key: 'invoice_number', label: 'Счет-фактура №' },
-  { key: 'invoice_date', label: 'Дата счета-фактуры' },
-  { key: 'seller_name', label: 'Продавец' },
-  { key: 'buyer_name', label: 'Покупатель' },
-  { key: 'seller_address', label: 'Адрес продавца' },
-  { key: 'buyer_address', label: 'Адрес покупателя' },
-  { key: 'seller_inn_kpp', label: 'ИНН/КПП продавца' },
-  { key: 'buyer_inn_kpp', label: 'ИНН/КПП покупателя' },
-  { key: 'shipper_name_address', label: 'Грузоотправитель и его адрес' },
-  { key: 'consignee_full', label: 'Грузополучатель и его адрес' },
-  { key: 'currency_full', label: 'Валюта: наименование, код' },
-  { key: 'government_contract_id', label: 'Идентификатор государственного контракта (при наличии)' },
-  { key: 'payment_doc_full', label: 'К платежно-расчетному документу № (5)' },
-  { key: 'shipping_doc_full', label: 'Документ об отгрузке (5а)' },
-  { key: 'advance_invoice_ref_full', label: 'К счету-фактуре ... (5б)' },
-  { key: 'director_position_name', label: 'Руководитель организации / иное уполномоченное лицо' },
-  { key: 'chief_accountant_position_name', label: 'Главный бухгалтер / иное уполномоченное лицо' },
-  { key: 'ip_authorized_person_name', label: 'ИП или иное уполномоченное лицо (ФИО)' },
-  { key: 'ip_details_full', label: 'ОГРНИП и дата присвоения номера' },
-  { key: 'transfer_acceptance_basis', label: 'Основание передачи (сдачи) / получения (приемки) [8]' },
-  { key: 'transport_cargo_info', label: 'Данные о транспортировке и грузе [9]' },
-  { key: 'transferor_position', label: 'Товар (груз) передал - должность [10]' },
-  { key: 'transferor_name', label: 'Товар (груз) передал - ФИО [10]' },
-  { key: 'buyer_receiver_position', label: 'Товар (груз) получил - должность [15]' },
-  { key: 'buyer_receiver_name', label: 'Товар (груз) получил - ФИО [15]' },
-  { key: 'shipment_date', label: 'Дата отгрузки, передачи (сдачи) [11]' },
-  { key: 'acceptance_date', label: 'Дата получения (приемки) [16]' },
-  { key: 'shipment_additional_info', label: 'Иные сведения об отгрузке, передаче [12]' },
-  { key: 'acceptance_additional_info', label: 'Иные сведения о получении, приемке [17]' },
-  { key: 'responsible_position', label: 'Ответственный за правильность (должность) [13]' },
-  { key: 'responsible_name', label: 'Ответственный за правильность (ФИО) [13]' },
-  { key: 'buyer_responsible_position', label: 'Ответственный покупателя (должность) [18]' },
-  { key: 'buyer_responsible_name', label: 'Ответственный покупателя (ФИО) [18]' },
-  {
-    key: 'document_creator_entity_name',
-    label: 'Наименование экономического субъекта – составителя документа (в т.ч. комиссионера / агента) [14]',
-  },
-  {
-    key: 'buyer_document_creator_entity_name',
-    label: 'Наименование экономического субъекта – составителя документа [19]',
-  },
-];
+function DocxFieldItem({ def }: { def: DocxFieldDef }) {
+  return (
+    <Form.Item
+      className={layoutStyles.compactItem}
+      label={
+        <span className={layoutStyles.labelRow}>
+          {def.marker ? <span className={layoutStyles.marker}>{def.marker}</span> : null}
+          <span className={layoutStyles.labelText}>{def.label}</span>
+        </span>
+      }
+      name={['docxFields', def.key]}
+    >
+      <Input />
+    </Form.Item>
+  );
+}
 
 export function ExportWordModal(props: ExportWordModalProps) {
-  const { isOpen, onCancel, onSubmit, params } = props;
+  const { isOpen, onCancel, onSubmit, params, state } = props;
+  const loading = Boolean(state?.loading);
   const [form] = Form.useForm<ExportWordModalValues>();
 
   useEffect(() => {
     if (!isOpen) return;
     form.setFieldsValue({
-      counterparties: params?.counterparties ?? EMPTY_COUNTERPARTIES,
       headerFields: params?.headerFields ?? EMPTY_HEADER_FIELDS,
-      footerFields: params?.footerFields ?? EMPTY_FOOTER_FIELDS,
       docxFields: params?.docxFields ?? {},
     });
   }, [form, isOpen, params]);
 
   const customTitle = (
-    <div className={styles.modalHeader}>
-      <span className={styles.modalTitle}>Проверка данных перед выгрузкой в Word</span>
-      <div className={styles.modalActions}>
+    <div className={uploadStyles.modalHeader}>
+      <span className={uploadStyles.modalTitle}>Проверка данных перед выгрузкой в Word</span>
+      <div className={uploadStyles.modalActions}>
         <Button
           type="primary"
-          className={styles.primaryButton}
+          className={uploadStyles.primaryButton}
+          loading={loading}
+          disabled={loading}
           onClick={() => form.submit()}
         >
           Выгрузить
         </Button>
-        <Button className={styles.secondaryButton} onClick={onCancel}>
+        <Button className={uploadStyles.secondaryButton} disabled={loading} onClick={onCancel}>
           Закрыть
         </Button>
       </div>
@@ -131,32 +118,144 @@ export function ExportWordModal(props: ExportWordModalProps) {
   );
 
   return (
-    <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
+    <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px" maskClosable={!loading} keyboard={!loading}>
       {customTitle}
-      <div style={{ padding: '0 14px 14px', overflow: 'auto' }}>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={(values) => {
-            onSubmit?.({
-              ...values,
-              docxFields: {
-                ...(params?.docxFields ?? {}),
-                ...(values.docxFields ?? {}),
-              },
-            });
-          }}
-        >
-          <div style={{ marginBottom: 8, fontWeight: 600 }}>Поля шаблона Word (full)</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 12 }}>
-            {DOCX_EDITABLE_FIELDS.map((field) => (
-              <Form.Item key={field.key} label={field.label} name={['docxFields', field.key]}>
-                <Input />
-              </Form.Item>
-            ))}
-          </div>
+      <div style={{ padding: '0 14px 14px', overflow: 'hidden' }}>
+        <Spin spinning={loading} tip="Формирование документа на сервере…">
+          <Form
+            form={form}
+            layout="vertical"
+            size="small"
+            onFinish={(values) => {
+              const editedHeader = values.headerFields ?? {};
+              onSubmit?.({
+                counterparties: params?.counterparties ?? EMPTY_COUNTERPARTIES,
+                headerFields: {
+                  ...(params?.headerFields ?? EMPTY_HEADER_FIELDS),
+                  ...editedHeader,
+                },
+                footerFields: params?.footerFields ?? EMPTY_FOOTER_FIELDS,
+                docxFields: {
+                  ...(params?.docxFields ?? {}),
+                  ...(values.docxFields ?? {}),
+                },
+              });
+            }}
+          >
+            <div className={layoutStyles.formBodyScroll}>
+              <div className={layoutStyles.sheet}>
+                  <div className={`${layoutStyles.sectionDivider} ${layoutStyles.sectionDividerLead}`}>
+                    Шапка документа (счёт-фактура, исправление, статус)
+                  </div>
+                  <div className={layoutStyles.invoiceBand}>
+                    <div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                        <Form.Item
+                          label={<span className={layoutStyles.labelText}>Счет-фактура №</span>}
+                          name={['docxFields', 'invoice_number']}
+                          className={layoutStyles.compactItem}
+                        >
+                          <Input placeholder="номер" />
+                        </Form.Item>
+                      <Form.Item
+                        label={<span className={layoutStyles.labelText}>от</span>}
+                        name={['docxFields', 'invoice_date']}
+                        className={layoutStyles.compactItem}
+                      >
+                        <Input placeholder="дата" />
+                      </Form.Item>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 8 }}>
+                      <Form.Item
+                        label={<span className={layoutStyles.labelText}>Исправление №</span>}
+                        name={['headerFields', 'correctionNumber']}
+                        className={layoutStyles.compactItem}
+                      >
+                        <Input placeholder="—" />
+                      </Form.Item>
+                      <Form.Item
+                        label={<span className={layoutStyles.labelText}>от</span>}
+                        name={['headerFields', 'correctionDate']}
+                        className={layoutStyles.compactItem}
+                      >
+                        <Input placeholder="—" />
+                      </Form.Item>
+                    </div>
+                    <Form.Item
+                      label={<span className={layoutStyles.labelText}>Статус / служебная отметка</span>}
+                      name={['headerFields', 'status']}
+                      className={layoutStyles.compactItem}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                  <div className={layoutStyles.metaHint}>
+                    Поля с номерами{' '}
+                    <strong>(1)</strong>, <strong>(6)</strong>, <strong>[10]</strong> и т.д. соответствуют графам бланка
+                    универсального передаточного документа (счёт-фактура).
+                  </div>
+                  </div>
+              </div>
 
-        </Form>
+                <div className={layoutStyles.twoCols}>
+                  <div className={layoutStyles.col}>
+                    <div className={layoutStyles.colHead}>Продавец · грузоотправитель · грузополучатель</div>
+                    {HEADER_LEFT_DOCX.map((def) => (
+                      <DocxFieldItem key={def.key} def={def} />
+                    ))}
+                  </div>
+                  <div className={layoutStyles.col}>
+                    <div className={layoutStyles.colHead}>Покупатель · валюта</div>
+                    {HEADER_RIGHT_DOCX.map((def) => (
+                      <DocxFieldItem key={def.key} def={def} />
+                    ))}
+                  </div>
+              </div>
+
+              <div className={layoutStyles.fullBand}>
+                  {HEADER_BAND_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+                  {HEADER_GOVERNMENT_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+              </div>
+
+              <div className={layoutStyles.signatureBand}>
+                  <div className={layoutStyles.colHead}>Подписи и реквизиты ИП (верх бланка)</div>
+                  {HEADER_SIGNATURE_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+              </div>
+
+              <div className={layoutStyles.sectionDivider}>Подвал документа (передача, подписи)</div>
+
+              <div className={layoutStyles.footerIntro}>
+                  <div className={layoutStyles.metaHint} style={{ marginBottom: 12 }}>
+                    Блок как на нижней части УПД: слева — продавец (передал), справа — покупатель (получил).
+                  </div>
+                  {FOOTER_FULL_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+              </div>
+
+              <div className={layoutStyles.footerTwoCols}>
+                  <div className={layoutStyles.footerCol}>
+                    <div className={layoutStyles.footerColTitle}>Передал (продавец)</div>
+                    {FOOTER_LEFT_DOCX.map((def) => (
+                      <DocxFieldItem key={def.key} def={def} />
+                    ))}
+                  </div>
+                  <div className={layoutStyles.footerCol}>
+                    <div className={layoutStyles.footerColTitle}>Получил (покупатель)</div>
+                    {FOOTER_RIGHT_DOCX.map((def) => (
+                      <DocxFieldItem key={def.key} def={def} />
+                    ))}
+                  </div>
+              </div>
+            </div>
+          </Form>
+        </Spin>
       </div>
     </SharedModal>
   );

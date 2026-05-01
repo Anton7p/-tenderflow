@@ -124,10 +124,11 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
                 Math.max(max, Number(row.index) || 0),
               0
             );
+            const normalizedValues = normalizeNumericFields(values);
             const newRow = {
-              ...values,
+              ...normalizedValues,
               id: `row-${Date.now()}`,
-              index: Number(values.index) || maxIndex + 1,
+              index: Number(normalizedValues.index) || maxIndex + 1,
             };
             store.setTableData([...store.tableData, newRow]);
             store.setFileLoaded(true);
@@ -189,6 +190,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
             docxFields?: DocxTemplateFieldsModel;
           }) => {
             try {
+              store.setLoading(true);
               const { blob, fileName } = await generateWordDocx({
                 tableData: store.tableData,
                 counterparties: values?.counterparties ?? store.counterparties ?? EMPTY_COUNTERPARTIES,
@@ -212,6 +214,8 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
               notify.success({ message: 'Word документ выгружен' });
             } catch {
               notify.error({ message: 'Не удалось сформировать Word документ' });
+            } finally {
+              store.setLoading(false);
             }
           },
           onCancel: () => store.closeModal(),
@@ -228,8 +232,32 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
         store.openModal({
           name: ModalsEnum.GROUP_POSITIONS,
           params: { rows: selectedRows },
-          onApply: () => {
-            notify.success({ message: 'Параметры группировки применены' });
+          onApply: (values?: UploadExcelRowModel) => {
+            if (!values) {
+              return;
+            }
+
+            const selectedSet = new Set(selectedIds.map(String));
+            const firstSelectedIndex = store.tableData.findIndex((row: UploadExcelRowModel) =>
+              selectedSet.has(String(row.id ?? row.index))
+            );
+
+            const groupedRow: UploadExcelRowModel = {
+              ...normalizeNumericFields(values),
+              id: `row-${Date.now()}`,
+            };
+
+            const remainingRows = store.tableData.filter(
+              (row: UploadExcelRowModel) => !selectedSet.has(String(row.id ?? row.index))
+            );
+            const insertAt = firstSelectedIndex >= 0 ? firstSelectedIndex : remainingRows.length;
+            const nextRows = [...remainingRows];
+            nextRows.splice(insertAt, 0, groupedRow);
+
+            store.setTableData(nextRows);
+            store.setRawRowsCount(nextRows.length);
+            store.closeModal();
+            notify.success({ message: 'Позиции сгруппированы' });
           },
           onCancel: () => store.closeModal(),
         });
@@ -259,4 +287,16 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
   const onAction = useActionsHandler(handlers);
 
   return useMemo(() => ({ actionsVisibility, onAction }), [actionsVisibility, onAction]);
+}
+
+function normalizeNumericFields(row: UploadExcelRowModel): UploadExcelRowModel {
+  return {
+    ...row,
+    index: Number(row.index) || 0,
+    quantity: Number(row.quantity) || 0,
+    price: Number(row.price) || 0,
+    totalBeforeTax: Number(row.totalBeforeTax) || 0,
+    taxAmount: Number(row.taxAmount) || 0,
+    totalWithTax: Number(row.totalWithTax) || 0,
+  };
 }

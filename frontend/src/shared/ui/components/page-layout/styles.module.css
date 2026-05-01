@@ -23,22 +23,29 @@
 
 .pageLayoutTools {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .pageLayoutActions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .pageLayoutFilter {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 .pageLayoutContent {
   flex: 1;
+  height: 100%;
+  min-height: 0;
 }
 
 .pageLayoutFooter {

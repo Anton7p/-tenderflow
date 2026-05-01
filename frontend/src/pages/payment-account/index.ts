@@ -1,0 +1,1 @@
+export { PaymentAccountPage } from './page';

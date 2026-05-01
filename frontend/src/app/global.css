@@ -70,11 +70,35 @@ textarea,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-.ant-btn:focus-visible,
-.ant-input:focus-visible,
-.ant-select-selector:focus-visible {
+.ant-btn:focus-visible {
   outline: 2px solid #ffd045 !important;
   outline-offset: 1px;
+}
+
+/*
+ * Ant Design сам рисует фокус у Input / Select (border + box-shadow).
+ * Не дублируем outline из focus-visible — иначе видна «вторая» жёлтая рамка.
+ */
+.ant-input:not(.ant-input-disabled):focus,
+.ant-input:not(.ant-input-disabled):focus-visible,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  outline: none !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  outline: none !important;
+}
+
+/* InputNumber: внутри обычный <input class="ant-input-number-input"> — без второго outline */
+.ant-input-number-input:focus,
+.ant-input-number-input:focus-visible {
+  outline: none !important;
+}
+
+.ant-input-number.ant-input-number-focused,
+.ant-input-number-focused {
+  outline: none !important;
 }
 
 /* Активная строка в таблице */

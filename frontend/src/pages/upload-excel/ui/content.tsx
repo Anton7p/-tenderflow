@@ -23,7 +23,7 @@ export function Content(props: PageUIComponentProps) {
           </Space>
         ) : (
 
-            <UploadExcelTable table={table} />
+            <UploadExcelTable table={table} showColumnTools={false} draggableColumns />
 
         )}
       </>

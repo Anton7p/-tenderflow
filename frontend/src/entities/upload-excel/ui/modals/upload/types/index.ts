@@ -6,7 +6,7 @@ export interface ModalProps {
   onCancel?: () => void;
   params?: unknown | null;
   onApply?: (values?: unknown) => void;
-  state?: any;
+  state?: { loading?: boolean };
 }
 
 export interface ModalState {

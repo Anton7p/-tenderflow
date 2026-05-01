@@ -110,6 +110,10 @@ export class UpdDocxGeneratorAdapter implements UpdDocumentGeneratorPort {
       { totalWithoutVat: 0, totalVat: 0, totalWithVat: 0 },
     );
 
+    templateFields.item_total_amount_without_vat = formatMoney(totals.totalWithoutVat);
+    templateFields.item_total_vat_amount = formatMoney(totals.totalVat);
+    templateFields.item_total_with_vat = formatMoney(totals.totalWithVat);
+
     const itemRows = (payload.tableData.length ? payload.tableData : [null]).map((row, index) => ({
       item_code: row?.productCode?.toString() ?? '',
       item_line_no: row ? String(row.index || index + 1) : '',

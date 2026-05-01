@@ -1,0 +1,56 @@
+.toolbar {
+  margin: 0;
+}
+
+.toolbarInner {
+  width: 100%;
+  justify-content: flex-end !important;
+  align-items: center !important;
+}
+
+.search {
+  width: 220px;
+  min-width: 160px;
+  max-width: min(360px, 40vw);
+}
+
+.columnsBtn {
+  border-color: #dbe2ea !important;
+}
+
+.dragHint {
+  font-size: 11px;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.columnPanel {
+  padding: 12px 14px;
+  min-width: 280px;
+  max-width: min(400px, 90vw);
+  max-height: min(360px, 50vh);
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #dbe2ea;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 32, 51, 0.12);
+}
+
+.columnPanelHint {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+.columnLabel {
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}

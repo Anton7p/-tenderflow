@@ -70,10 +70,13 @@ interface ExportWordModalProps {
 export function useModals(props: PageUIComponentProps) {
   const { page } = props;
   const { state, actions } = page;
-  const { modal } = state;
+  const { modal, loading } = state;
   const { onAction } = actions;
 
-  const config = useMemo(() => ({ modal, onAction }), [modal, onAction]);
+  const config = useMemo(
+    () => ({ modal, onAction, state: { loading } }),
+    [modal, onAction, loading]
+  );
 
   return useMemo(
     () => ({

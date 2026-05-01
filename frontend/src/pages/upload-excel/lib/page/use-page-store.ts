@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { patchDraftDocxFieldsTotals } from '@entities/upload-excel/lib';
 import { initialState } from '../../config';
 import type { Store } from '../../types';
 
@@ -27,6 +28,7 @@ export const usePageStore = create<Store>()(
     setTableData: (data) =>
       set((state) => {
         state.tableData = data;
+        patchDraftDocxFieldsTotals(state.docxFields, data);
       }),
     setOriginalTableData: (data) =>
       set((state) => {
@@ -62,6 +64,8 @@ export const usePageStore = create<Store>()(
         state.tableData = state.tableData.filter(
           (row) => !selectedSet.has(String(row.id ?? row.index))
         );
+        state.rawRowsCount = state.tableData.length;
+        patchDraftDocxFieldsTotals(state.docxFields, state.tableData);
       }),
     openModal: (params) =>
       set((state) => {

@@ -1,0 +1,1 @@
+export { TenderDownloadsPage } from './page';

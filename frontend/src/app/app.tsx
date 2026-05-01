@@ -1,32 +1,26 @@
 import { useState } from 'react';
 import { Layout } from 'antd';
 import { Header, Tabs, Workspace } from './layout';
-import { UploadExcelPage, DocumentJournalPage, SettingsPage } from '../pages';
-import {
-  FileTextOutlined,
-  AppstoreOutlined,
-  UnorderedListOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { UploadExcelPage, PaymentAccountPage, SettingsPage } from '../pages';
+import { BankOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 
 const NAV_TABS = [
-  { id: 'upload', label: 'Загрузка тендеров', icon: <FileTextOutlined /> },
-  { id: 'templates', label: 'Шаблоны', icon: <AppstoreOutlined /> },
-  { id: 'journal', label: 'Журнал документов', icon: <UnorderedListOutlined /> },
+  { id: 'upd-downloads', label: 'Выгрузка УПД', icon: <FileTextOutlined /> },
+  { id: 'payment-account', label: 'Расчётный счёт', icon: <BankOutlined /> },
   { id: 'settings', label: 'Настройки', icon: <SettingOutlined /> },
 ];
 
 function App() {
-  const [activeTab, setActiveTab] = useState('upload');
+  const [activeTab, setActiveTab] = useState('upd-downloads');
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'upload':
+      case 'upd-downloads':
         return <UploadExcelPage />;
-      case 'journal':
-        return <DocumentJournalPage />;
+      case 'payment-account':
+        return <PaymentAccountPage />;
       case 'settings':
         return <SettingsPage />;
       default:

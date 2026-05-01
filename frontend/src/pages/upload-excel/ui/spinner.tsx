@@ -6,7 +6,8 @@ interface SpinnerProps {
 }
 
 export const Spinner = ({ page }: SpinnerProps) => {
-  if (!page.state.loading) return null;
+  const { loading, modal } = page.state;
+  if (!loading || modal?.name) return null;
 
   return (
     <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>

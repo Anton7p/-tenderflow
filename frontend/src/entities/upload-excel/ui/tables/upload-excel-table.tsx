@@ -1,9 +1,19 @@
-import { UniversalTable } from '@shared/ui';
+import { GridTable } from '@shared/ui';
 
-import type { UploadExcelTableProps} from '../../types';
+import type { UploadExcelTableProps } from '../../types';
+import { UploadExcelTableToolbar } from './upload-excel-table-toolbar';
 
 export function UploadExcelTable(props: UploadExcelTableProps) {
-  const { table } = props;
+  const { table, withSelection = true, showColumnTools = true, draggableColumns = true } = props;
 
-  return <UniversalTable table={table} />;
+  return (
+    <>
+      {showColumnTools ? <UploadExcelTableToolbar table={table} /> : null}
+      <GridTable
+        table={table}
+        withSelection={withSelection}
+        draggableColumns={draggableColumns}
+      />
+    </>
+  );
 }

@@ -1,4 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
+import { formatMoneyDisplay } from '../lib/format-money-display';
+import { formatQuantityDisplay } from '../lib/format-quantity-display';
 import type { UploadExcelRowModel } from '../types/public';
 
 const columnHelper = createColumnHelper<UploadExcelRowModel>();
@@ -36,7 +38,7 @@ export const columns = [
       columnHelper.accessor('name', {
         header: 'Наименование товара (описание выполненных работ, оказанных услуг), имущественного права',
         size: 280,
-        meta: { isName: true }
+        meta: { isName: true },
       }),
     ],
   }),
@@ -75,8 +77,12 @@ export const columns = [
     columns: [
       columnHelper.accessor('quantity', {
         header: 'Количество (объем)',
-        footer: ({ table }) => table.getRowModel().rows.reduce((sum, row) => sum + row.original.quantity, 0),
+        footer: ({ table }) =>
+          formatQuantityDisplay(
+            table.getFilteredRowModel().rows.reduce((sum, row) => sum + row.original.quantity, 0)
+          ),
         meta: { isNumeric: true },
+        cell: (info) => formatQuantityDisplay(info.getValue()),
         size: 76,
       }),
     ],
@@ -90,7 +96,8 @@ export const columns = [
       columnHelper.accessor('price', {
         header: 'Цена (тариф) за единицу измерения',
         footer: '',
-        meta: { isNumeric: true },
+        meta: { isNumeric: true, isMoney: true },
+        cell: (info) => formatMoneyDisplay(info.getValue()),
         size: 86,
       }),
     ],
@@ -103,8 +110,12 @@ export const columns = [
     columns: [
       columnHelper.accessor('totalBeforeTax', {
         header: 'Стоимость товаров (работ, услуг), имущественных прав без налога - всего',
-        footer: ({ table }) => table.getRowModel().rows.reduce((sum, row) => sum + row.original.totalBeforeTax, 0).toFixed(2),
-        meta: { isNumeric: true },
+        footer: ({ table }) =>
+          formatMoneyDisplay(
+            table.getFilteredRowModel().rows.reduce((sum, row) => sum + row.original.totalBeforeTax, 0)
+          ),
+        meta: { isNumeric: true, isMoney: true },
+        cell: (info) => formatMoneyDisplay(info.getValue()),
         size: 96,
       }),
     ],
@@ -145,8 +156,12 @@ export const columns = [
     columns: [
       columnHelper.accessor('taxAmount', {
         header: 'Сумма налога, предъявляемая покупателю',
-        footer: ({ table }) => table.getRowModel().rows.reduce((sum, row) => sum + row.original.taxAmount, 0).toFixed(2),
-        meta: { isNumeric: true },
+        footer: ({ table }) =>
+          formatMoneyDisplay(
+            table.getFilteredRowModel().rows.reduce((sum, row) => sum + row.original.taxAmount, 0)
+          ),
+        meta: { isNumeric: true, isMoney: true },
+        cell: (info) => formatMoneyDisplay(info.getValue()),
         size: 86,
       }),
     ],
@@ -159,8 +174,12 @@ export const columns = [
     columns: [
       columnHelper.accessor('totalWithTax', {
         header: 'Стоимость товаров (работ, услуг), имущественных прав с налогом - всего',
-        footer: ({ table }) => table.getRowModel().rows.reduce((sum, row) => sum + row.original.totalWithTax, 0).toFixed(2),
-        meta: { isNumeric: true },
+        footer: ({ table }) =>
+          formatMoneyDisplay(
+            table.getFilteredRowModel().rows.reduce((sum, row) => sum + row.original.totalWithTax, 0)
+          ),
+        meta: { isNumeric: true, isMoney: true },
+        cell: (info) => formatMoneyDisplay(info.getValue()),
         size: 96,
       }),
     ],
@@ -187,7 +206,8 @@ export const columns = [
     header: ' ',
     columns: [
       columnHelper.accessor('declarationNum', {
-        header: 'Регистрационный номер декларации на товары или регистрационный номер партии товара, подлежащего прослеживаемости',
+        header:
+          'Регистрационный номер декларации на товары или регистрационный номер партии товара, подлежащего прослеживаемости',
         meta: { isNumeric: true },
         size: 96,
       }),
