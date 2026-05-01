@@ -1,0 +1,1 @@
+export { UploadExcelPage } from './page';

@@ -1,0 +1,53 @@
+.form {
+  margin-bottom: 2px;
+  padding: 8px 10px;
+  border: 1px solid #dbe2ea;
+  border-radius: 6px;
+  background: #f9fbfd;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px 10px;
+}
+
+.item {
+  margin-bottom: 2px !important;
+}
+
+.item :global(.ant-form-item-label) {
+  padding: 0 0 2px !important;
+}
+
+.item :global(.ant-form-item-label > label) {
+  font-size: 11px;
+  line-height: 1.1;
+  color: #334155;
+  font-weight: 500;
+}
+
+.item :global(.ant-input),
+.item :global(.ant-input-number) {
+  height: 26px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-color: #cfd7e1;
+  background: #ffffff;
+}
+
+.field {
+  width: 100%;
+}
+
+@media (max-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

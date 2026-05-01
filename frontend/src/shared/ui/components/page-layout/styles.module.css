@@ -1,0 +1,46 @@
+.pageLayout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageLayoutHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pageLayoutTitle {
+  margin-bottom: 8px;
+}
+
+.pageLayoutTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.pageLayoutTools {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pageLayoutActions {
+  display: flex;
+  gap: 8px;
+}
+
+.pageLayoutFilter {
+  display: flex;
+  gap: 8px;
+}
+
+.pageLayoutContent {
+  flex: 1;
+}
+
+.pageLayoutFooter {
+  margin-top: 20px;
+}

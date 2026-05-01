@@ -1,0 +1,29 @@
+.container {
+  overflow: auto;
+  flex: 1;
+}
+
+/* Переопределение стилей Ant Design Table */
+.container :global(.ant-table) {
+  font-family: var(--font-family);
+}
+
+.container :global(.ant-table-thead > tr > th) {
+  background-color: var(--table-header-bg) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 500 !important;
+  border-color: var(--color-border) !important;
+}
+
+.container :global(.ant-table-tbody > tr > td) {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+.container :global(.ant-table-tbody > tr:hover > td) {
+  background-color: var(--table-hover-bg) !important;
+}
+
+.container :global(.ant-table-tbody > tr.ant-table-row-selected > td) {
+  background-color: var(--table-hover-bg) !important;
+}

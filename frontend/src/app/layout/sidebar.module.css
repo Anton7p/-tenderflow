@@ -1,0 +1,39 @@
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px;
+}
+
+.menu {
+  background: transparent;
+  border: none;
+}
+
+/* Переопределение стилей Ant Design Menu */
+.menu :global(.ant-menu-item) {
+  border-radius: var(--border-radius) !important;
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  margin-bottom: 4px !important;
+  background-color: transparent !important;
+  color: var(--color-text-primary) !important;
+  transition: all 0.2s ease;
+}
+
+.menu :global(.ant-menu-item:hover) {
+  background-color: var(--color-bg-layout) !important;
+}
+
+.menu :global(.ant-menu-item-selected) {
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 500 !important;
+}
+
+.menu :global(.ant-menu-item .anticon) {
+  font-size: 16px;
+  margin-right: 8px;
+}

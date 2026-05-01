@@ -1,0 +1,1 @@
+export { GroupPositionsModal } from './modal';

@@ -1,0 +1,44 @@
+.tabsContainer {
+  background-color: var(--color-bg-layout);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(255, 208, 69, 0.1);
+}
+
+.tabActive {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-primary);
+  background-color: rgba(255, 208, 69, 0.15);
+}
+
+.tabIcon {
+  font-size: 14px;
+}
+
+.tabLabel {
+  white-space: nowrap;
+}

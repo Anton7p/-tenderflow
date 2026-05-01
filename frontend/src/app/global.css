@@ -1,0 +1,134 @@
+:root {
+  /* Цвета Modern 1C */
+  --color-primary: #FFD045;
+  --color-bg-layout: #F8FAFC;
+  --color-bg-container: #FFFFFF;
+  --color-border: #D9D9D9;
+  --color-border-secondary: #E5E7EB;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+
+  /* Цвета для интерфейса */
+  --header-bg: #FFE066;
+  --sidebar-bg: #FFFFFF;
+  --command-bar-bg: #F2F2F2;
+  --table-header-bg: #F2F2F2;
+  --table-hover-bg: #FFD045;
+
+  /* Размеры */
+  --header-height: 48px;
+  --sidebar-width: 220px;
+  --border-radius: 3px;
+
+  /* Отступы */
+  --spacing-lg: 20px;
+
+  /* Шрифты */
+  --font-family: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-base: 13px;
+}
+
+/* Глобальные правила верстки */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg-layout);
+}
+
+/* У кнопок */
+button,
+.ant-btn {
+  box-shadow: none !important;
+}
+
+.ant-btn {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.ant-btn:hover {
+  filter: brightness(0.98);
+}
+
+/* Скругление для кнопок и инпутов */
+button,
+input,
+select,
+textarea,
+.ant-btn,
+.ant-input,
+.ant-select {
+  border-radius: var(--border-radius) !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.ant-btn:focus-visible,
+.ant-input:focus-visible,
+.ant-select-selector:focus-visible {
+  outline: 2px solid #ffd045 !important;
+  outline-offset: 1px;
+}
+
+/* Активная строка в таблице */
+.ant-table-tbody > tr.ant-table-row-selected > td,
+.ant-table-tbody > tr:hover > td {
+  background-color: var(--table-hover-bg) !important;
+}
+
+/* Шапка таблицы */
+.ant-table-thead > tr > th {
+  background-color: var(--table-header-bg) !important;
+  border-color: var(--color-border) !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C0C0C0;
+  /* Можно добавить небольшое скругление, чтобы такая тонкая линия не выглядела "рваной" */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A8A8;
+}
+
+.app-notification.ant-notification-notice {
+  border: 1px solid #f2df9b !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+  background: #fffdf5 !important;
+  min-height: 96px;
+  padding: 14px 14px !important;
+}
+
+.app-notification.ant-notification-notice .ant-notification-notice-message {
+  margin: -2px -4px 8px -4px !important;
+  padding: 9px 12px !important;
+  background: #fff1bf !important;
+  border: 1px solid #f2df9b !important;
+  border-radius: 4px !important;
+  color: #6b4e00 !important;
+  font-weight: 600 !important;
+}
+
+.app-notification.ant-notification-notice .ant-notification-notice-description {
+  color: #5b5b4f !important;
+  font-size: 13px !important;
+}
+

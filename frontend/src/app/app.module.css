@@ -1,0 +1,21 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: var(--1c-bg-app);
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.layoutContent {
+  width: 100%;
+  max-width: 1440px;
+  display: flex;
+  overflow: hidden;
+}
