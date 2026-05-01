@@ -1,52 +1,10 @@
-import { ParsedExcelDocument } from '../../domain/upload-excel.domain';
-import { DocxTemplateFieldsDto } from '../../upload-excel.types';
-
-function formatNumber(value: number): string {
-  if (!Number.isFinite(value)) {
-    return '';
-  }
-  return new Intl.NumberFormat('ru-RU', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function sanitizeMarkerValue(value: string): string {
-  const normalized = (value || '').trim();
-  if (!normalized) {
-    return '';
-  }
-  return /^\(\d+\)$/u.test(normalized) || /^\[\d+\]$/u.test(normalized) ? '' : normalized;
-}
-
-function sanitizeEntityName(value: string): string {
-  const normalized = (value || '').trim();
-  if (!normalized) {
-    return '';
-  }
-  const lower = normalized.toLowerCase();
-  if (lower.includes('наименование экономического субъекта')) {
-    return '';
-  }
-  if (/^\[\d+\]$/u.test(normalized)) {
-    return '';
-  }
-  return normalized;
-}
-
-function compactTemplateFields(
-  fields: Partial<DocxTemplateFieldsDto>,
-): Partial<DocxTemplateFieldsDto> {
-  const keepEmptyKeys = new Set<keyof DocxTemplateFieldsDto>([
-    'shipment_additional_info',
-    'acceptance_additional_info',
-  ]);
-  return Object.fromEntries(
-    Object.entries(fields).filter(([key, value]) =>
-      value !== '' || keepEmptyKeys.has(key as keyof DocxTemplateFieldsDto),
-    ),
-  ) as Partial<DocxTemplateFieldsDto>;
-}
+import { ParsedExcelDocument } from '../../../domain/upload-excel.domain';
+import { DocxTemplateFieldsDto } from '../../../upload-excel.types';
+import {
+  compactTemplateFields,
+  sanitizeEntityName,
+  sanitizeMarkerValue,
+} from './docx-template-fields.helpers';
 
 export function buildDocxTemplateFields(payload: ParsedExcelDocument): Partial<DocxTemplateFieldsDto> {
   const [sellerInn = '', sellerKpp = ''] = (payload.counterparties.sellerInnKpp || '')
@@ -93,8 +51,6 @@ export function buildDocxTemplateFields(payload: ParsedExcelDocument): Partial<D
     pages_info: payload.footerFields.pagesInfo || '',
     invoice_number: docNumber,
     invoice_date: payload.headerFields.documentDate || '',
-    document_number: docNumber,
-    document_date: payload.headerFields.documentDate || '',
     seller_name: sellerName,
     seller_address: sellerAddress,
     buyer_name: buyerName,

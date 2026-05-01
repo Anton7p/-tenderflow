@@ -8,7 +8,7 @@ import {
   UPD_DOCUMENT_GENERATOR_PORT,
 } from './application/ports/upd-document-generator.port';
 import { ParseExcelUseCase } from './application/use-cases/parse-excel.use-case';
-import { UpdDocxGeneratorAdapter } from './infrastructure/docx/upd-docx-generator.adapter';
+import { UpdDocxGeneratorAdapter } from './infrastructure/docx/generator/upd-docx-generator.adapter';
 import { XlsxExcelParserAdapter } from './infrastructure/excel/xlsx-excel-parser.adapter';
 
 @Module({

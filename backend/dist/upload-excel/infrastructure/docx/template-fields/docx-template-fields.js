@@ -1,43 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildDocxTemplateFields = buildDocxTemplateFields;
-function formatNumber(value) {
-    if (!Number.isFinite(value)) {
-        return '';
-    }
-    return new Intl.NumberFormat('ru-RU', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-    }).format(value);
-}
-function sanitizeMarkerValue(value) {
-    const normalized = (value || '').trim();
-    if (!normalized) {
-        return '';
-    }
-    return /^\(\d+\)$/u.test(normalized) || /^\[\d+\]$/u.test(normalized) ? '' : normalized;
-}
-function sanitizeEntityName(value) {
-    const normalized = (value || '').trim();
-    if (!normalized) {
-        return '';
-    }
-    const lower = normalized.toLowerCase();
-    if (lower.includes('наименование экономического субъекта')) {
-        return '';
-    }
-    if (/^\[\d+\]$/u.test(normalized)) {
-        return '';
-    }
-    return normalized;
-}
-function compactTemplateFields(fields) {
-    const keepEmptyKeys = new Set([
-        'shipment_additional_info',
-        'acceptance_additional_info',
-    ]);
-    return Object.fromEntries(Object.entries(fields).filter(([key, value]) => value !== '' || keepEmptyKeys.has(key)));
-}
+const docx_template_fields_helpers_1 = require("./docx-template-fields.helpers");
 function buildDocxTemplateFields(payload) {
     const [sellerInn = '', sellerKpp = ''] = (payload.counterparties.sellerInnKpp || '')
         .split('/')
@@ -56,33 +20,31 @@ function buildDocxTemplateFields(payload) {
     const shipmentDocFull = payload.headerFields.shipmentDoc || '';
     const paymentDocFull = payload.headerFields.paymentDoc || '';
     const docNumber = payload.headerFields.documentNumber || '';
-    const advanceInvoiceRefFull = sanitizeMarkerValue(payload.headerFields.advanceInvoiceRef || '');
-    const contractId = sanitizeMarkerValue(payload.headerFields.contractId || '');
+    const advanceInvoiceRefFull = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.headerFields.advanceInvoiceRef || '');
+    const contractId = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.headerFields.contractId || '');
     const totalWithoutVat = payload.footerFields.itemTotalAmountWithoutVat || '';
     const totalVat = payload.footerFields.itemTotalVatAmount || '';
     const totalWithVat = payload.footerFields.itemTotalWithVat || '';
-    const transferorPosition = sanitizeMarkerValue(payload.footerFields.transferorPosition || '');
-    const transferorName = sanitizeMarkerValue(payload.footerFields.transferorName || '');
-    const buyerReceiverPosition = sanitizeMarkerValue(payload.footerFields.receiverPosition || '');
-    const buyerReceiverName = sanitizeMarkerValue(payload.footerFields.receiverName || '');
-    const directorPositionName = sanitizeMarkerValue(payload.footerFields.directorPositionName || '');
-    const chiefAccountantPositionName = sanitizeMarkerValue(payload.footerFields.chiefAccountantPositionName || '');
-    const shipmentAdditionalInfo = sanitizeMarkerValue(payload.footerFields.transferInfo || '');
-    const acceptanceAdditionalInfo = sanitizeMarkerValue(payload.footerFields.receiverInfo || '');
-    const responsiblePosition = sanitizeMarkerValue(payload.footerFields.sellerResponsiblePosition || '');
-    const responsibleName = sanitizeMarkerValue(payload.footerFields.sellerResponsible || '');
-    const buyerResponsiblePosition = sanitizeMarkerValue(payload.footerFields.buyerResponsiblePosition || '');
-    const buyerResponsibleName = sanitizeMarkerValue(payload.footerFields.buyerResponsible || '');
-    const buyerEntityName = sanitizeEntityName(payload.footerFields.buyerEntityName || '');
-    const sellerEntityName = sanitizeEntityName(payload.footerFields.sellerEntityName || '');
-    const transportCargoInfo = sanitizeMarkerValue(payload.footerFields.transportData || '');
-    const transferAcceptanceBasis = sanitizeMarkerValue(payload.footerFields.transferBasis || '');
-    return compactTemplateFields({
+    const transferorPosition = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.transferorPosition || '');
+    const transferorName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.transferorName || '');
+    const buyerReceiverPosition = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.receiverPosition || '');
+    const buyerReceiverName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.receiverName || '');
+    const directorPositionName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.directorPositionName || '');
+    const chiefAccountantPositionName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.chiefAccountantPositionName || '');
+    const shipmentAdditionalInfo = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.transferInfo || '');
+    const acceptanceAdditionalInfo = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.receiverInfo || '');
+    const responsiblePosition = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.sellerResponsiblePosition || '');
+    const responsibleName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.sellerResponsible || '');
+    const buyerResponsiblePosition = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.buyerResponsiblePosition || '');
+    const buyerResponsibleName = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.buyerResponsible || '');
+    const buyerEntityName = (0, docx_template_fields_helpers_1.sanitizeEntityName)(payload.footerFields.buyerEntityName || '');
+    const sellerEntityName = (0, docx_template_fields_helpers_1.sanitizeEntityName)(payload.footerFields.sellerEntityName || '');
+    const transportCargoInfo = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.transportData || '');
+    const transferAcceptanceBasis = (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.transferBasis || '');
+    return (0, docx_template_fields_helpers_1.compactTemplateFields)({
         pages_info: payload.footerFields.pagesInfo || '',
         invoice_number: docNumber,
         invoice_date: payload.headerFields.documentDate || '',
-        document_number: docNumber,
-        document_date: payload.headerFields.documentDate || '',
         seller_name: sellerName,
         seller_address: sellerAddress,
         buyer_name: buyerName,
@@ -98,8 +60,8 @@ function buildDocxTemplateFields(payload) {
         advance_invoice_ref_full: advanceInvoiceRefFull,
         director_position_name: directorPositionName,
         chief_accountant_position_name: chiefAccountantPositionName,
-        ip_authorized_person_name: sanitizeMarkerValue(payload.footerFields.ipAuthorizedPersonName || ''),
-        ip_details_full: sanitizeMarkerValue(payload.footerFields.ipDetailsFull || ''),
+        ip_authorized_person_name: (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.ipAuthorizedPersonName || ''),
+        ip_details_full: (0, docx_template_fields_helpers_1.sanitizeMarkerValue)(payload.footerFields.ipDetailsFull || ''),
         transfer_acceptance_basis: transferAcceptanceBasis,
         transport_cargo_info: transportCargoInfo,
         transferor_position: transferorPosition,

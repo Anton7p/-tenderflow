@@ -30,11 +30,8 @@ export interface Counterparties {
     buyerInnKpp: string;
 }
 export interface HeaderFields {
-    status: string;
     documentNumber: string;
     documentDate: string;
-    correctionNumber: string;
-    correctionDate: string;
     shipperNameAddress: string;
     consigneeFull: string;
     paymentDoc: string;
@@ -42,7 +39,6 @@ export interface HeaderFields {
     advanceInvoiceRef: string;
     currency: string;
     contractId: string;
-    baseDocument: string;
 }
 export interface FooterFields {
     pagesInfo: string;

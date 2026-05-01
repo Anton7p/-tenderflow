@@ -13,7 +13,7 @@ const build_upd_word_docx_use_case_1 = require("./application/use-cases/build-up
 const excel_parser_port_1 = require("./application/ports/excel-parser.port");
 const upd_document_generator_port_1 = require("./application/ports/upd-document-generator.port");
 const parse_excel_use_case_1 = require("./application/use-cases/parse-excel.use-case");
-const upd_docx_generator_adapter_1 = require("./infrastructure/docx/upd-docx-generator.adapter");
+const upd_docx_generator_adapter_1 = require("./infrastructure/docx/generator/upd-docx-generator.adapter");
 const xlsx_excel_parser_adapter_1 = require("./infrastructure/excel/xlsx-excel-parser.adapter");
 let UploadExcelModule = class UploadExcelModule {
 };

@@ -32,11 +32,8 @@ export interface CounterpartiesDto {
 }
 
 export interface HeaderFieldsDto {
-  status: string;
   documentNumber: string;
   documentDate: string;
-  correctionNumber: string;
-  correctionDate: string;
   shipperNameAddress: string;
   consigneeFull: string;
   paymentDoc: string;
@@ -44,7 +41,6 @@ export interface HeaderFieldsDto {
   advanceInvoiceRef: string;
   currency: string;
   contractId: string;
-  baseDocument: string;
 }
 
 export interface FooterFieldsDto {
@@ -77,43 +73,19 @@ export interface FooterFieldsDto {
 export interface DocxTemplateFieldsDto {
   pages_info: string;
   invoice_number: string;
-  document_number: string;
-  document_date: string;
-  correction_number: string;
-  correction_date: string;
-  upd_status: string;
   seller_name: string;
   seller_address: string;
-  seller_inn: string;
-  seller_kpp: string;
-  consignor: string;
-  payment_doc_number: string;
-  ship_doc_number: string;
-  ship_date: string;
   buyer_name: string;
   buyer_address: string;
-  buyer_inn: string;
-  buyer_kpp: string;
-  consignee: string;
-  currency_name: string;
-  currency_code: string;
-  contract_id: string;
-  operation_content: string;
-  base_document: string;
   transfer_acceptance_basis: string;
   transport_cargo_info: string;
-  transfer_position: string;
-  transfer_name: string;
   shipment_date: string;
-  additional_info: string;
   responsible_position: string;
   responsible_name: string;
   document_creator_entity_name: string;
   buyer_responsible_position: string;
   buyer_responsible_name: string;
   buyer_document_creator_entity_name: string;
-  receiver_position: string;
-  receiver_name: string;
   buyer_receiver_position: string;
   buyer_receiver_name: string;
   acceptance_date: string;
@@ -136,7 +108,6 @@ export interface DocxTemplateFieldsDto {
   item_declaration_number: string;
   item_total_amount_without_vat: string;
   item_total_vat_amount: string;
-  item_total_with_vat_summary: string;
   advance_invoice_ref_full: string;
   shipping_doc_full: string;
   payment_doc_full: string;

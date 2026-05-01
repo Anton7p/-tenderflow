@@ -6,11 +6,7 @@ export function extractHeaderFields(rows: (string | number | null)[][]): HeaderF
   const invoiceLine =
     findHeaderLineByMarker(textRows, '(1)') ||
     findSegmentAfterLabel(textRows, 'Счет-фактура №', { stopAtMarker: true });
-  const correctionLine =
-    findHeaderLineByMarker(textRows, '(1а)') ||
-    findSegmentAfterLabel(textRows, 'Исправление №', { stopAtMarker: true });
   const invoicePair = parseNumberDatePair(invoiceLine);
-  const correctionPair = parseNumberDatePair(correctionLine);
   const paymentDoc = cleanupFieldValue(
     findValueBeforeMarker(textRows, '(5)') ||
       findSegmentAfterLabel(textRows, 'К платежно-расчетному документу №', { stopAtMarker: true }),
@@ -25,11 +21,8 @@ export function extractHeaderFields(rows: (string | number | null)[][]): HeaderF
     );
 
   return {
-    status: findValue(textRows, 'Статус:'),
     documentNumber: invoicePair.number,
     documentDate: invoicePair.date,
-    correctionNumber: correctionPair.number,
-    correctionDate: correctionPair.date,
     shipperNameAddress:
       findValueBeforeMarker(textRows, '(3)') ||
       findSegmentAfterLabel(textRows, 'Грузоотправитель и его адрес', { stopAtMarker: true }),
@@ -50,48 +43,7 @@ export function extractHeaderFields(rows: (string | number | null)[][]): HeaderF
       findValueBeforeMarker(textRows, '(7)') ||
       findSegmentAfterLabel(textRows, 'Валюта: наименование, код', { stopAtMarker: true }),
     contractId: sanitizeContractId(contractIdRaw),
-    baseDocument: findValue(textRows, 'Основание передачи'),
   };
-}
-
-function findValue(
-  rows: string[][],
-  label: string,
-  occurrence = 0,
-  pivot = '',
-): string {
-  const normalizedLabel = normalize(label);
-  const normalizedPivot = normalize(pivot);
-  let seen = 0;
-
-  for (const row of rows) {
-    for (let i = 0; i < row.length; i += 1) {
-      if (!normalize(row[i]).includes(normalizedLabel)) {
-        continue;
-      }
-      if (seen < occurrence) {
-        seen += 1;
-        continue;
-      }
-
-      const tail = row.slice(i + 1).filter((cell) => cell.trim().length > 0);
-      if (!tail.length) {
-        return '';
-      }
-
-      if (!normalizedPivot) {
-        return tail[0] ?? '';
-      }
-
-      const pivotIndex = tail.findIndex((cell) => normalize(cell) === normalizedPivot);
-      if (pivotIndex >= 0 && tail[pivotIndex + 1]) {
-        return tail[pivotIndex + 1];
-      }
-      return tail[0] ?? '';
-    }
-  }
-
-  return '';
 }
 
 function parseNumberDatePair(value: string): { number: string; date: string } {

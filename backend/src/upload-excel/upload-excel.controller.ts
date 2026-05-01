@@ -13,7 +13,7 @@ import { Response } from 'express';
 import { BuildUpdWordDocxUseCase } from './application/use-cases/build-upd-word-docx.use-case';
 import { ParseExcelUseCase } from './application/use-cases/parse-excel.use-case';
 import { DocxTemplateFieldsDto, GenerateDocxRequestDto, UploadExcelResponseDto } from './upload-excel.types';
-import { buildDocxTemplateFields } from './infrastructure/docx/docx-template-fields';
+import { buildDocxTemplateFields } from './infrastructure/docx/template-fields/docx-template-fields';
 
 const EDITABLE_DOCX_KEYS = [
   'pages_info',
@@ -68,12 +68,10 @@ function buildEditableDocxFields(fields: Partial<DocxTemplateFieldsDto>): Partia
 function buildGeneratedDocxFileName(payload: GenerateDocxRequestDto): string {
   const number =
     payload.docxFields?.invoice_number?.trim() ||
-    payload.docxFields?.document_number?.trim() ||
     payload.headerFields?.documentNumber?.trim() ||
     '--';
   const rawDate =
     payload.docxFields?.invoice_date?.trim() ||
-    payload.docxFields?.document_date?.trim() ||
     payload.headerFields?.documentDate?.trim() ||
     '';
   const humanDate = toRussianHumanDate(rawDate) || '--';
@@ -182,11 +180,8 @@ export class UploadExcelController {
         buyerInnKpp: '',
       },
       headerFields: payload.headerFields ?? {
-        status: '',
         documentNumber: '',
         documentDate: '',
-        correctionNumber: '',
-        correctionDate: '',
         shipperNameAddress: '',
         consigneeFull: '',
         paymentDoc: '',
@@ -194,7 +189,6 @@ export class UploadExcelController {
         advanceInvoiceRef: '',
         currency: '',
         contractId: '',
-        baseDocument: '',
       },
       footerFields: payload.footerFields ?? {
         pagesInfo: '',
@@ -238,8 +232,6 @@ export class UploadExcelController {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     );
     const outputFileName = buildGeneratedDocxFileName(payload);
-    // eslint-disable-next-line no-console
-    console.log('[upload-excel] output filename', outputFileName);
     res.setHeader(
       'Content-Disposition',
       `attachment; filename*=UTF-8''${encodeURIComponent(outputFileName)}`,

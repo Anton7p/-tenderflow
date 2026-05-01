@@ -6,20 +6,14 @@ function extractHeaderFields(rows) {
     const textRows = rows.map((row) => row.map((cell) => (0, upload_excel_parser_utils_1.toCellString)(cell)));
     const invoiceLine = findHeaderLineByMarker(textRows, '(1)') ||
         findSegmentAfterLabel(textRows, 'Счет-фактура №', { stopAtMarker: true });
-    const correctionLine = findHeaderLineByMarker(textRows, '(1а)') ||
-        findSegmentAfterLabel(textRows, 'Исправление №', { stopAtMarker: true });
     const invoicePair = parseNumberDatePair(invoiceLine);
-    const correctionPair = parseNumberDatePair(correctionLine);
     const paymentDoc = cleanupFieldValue(findValueBeforeMarker(textRows, '(5)') ||
         findSegmentAfterLabel(textRows, 'К платежно-расчетному документу №', { stopAtMarker: true }));
     const contractIdRaw = findValueBeforeMarker(textRows, '(8)') ||
         findSegmentAfterExactLabel(textRows, 'Идентификатор государственного контракта, договора (соглашения) (при наличии):', { stopAtMarker: true });
     return {
-        status: findValue(textRows, 'Статус:'),
         documentNumber: invoicePair.number,
         documentDate: invoicePair.date,
-        correctionNumber: correctionPair.number,
-        correctionDate: correctionPair.date,
         shipperNameAddress: findValueBeforeMarker(textRows, '(3)') ||
             findSegmentAfterLabel(textRows, 'Грузоотправитель и его адрес', { stopAtMarker: true }),
         consigneeFull: findValueBeforeMarker(textRows, '(4)') ||
@@ -35,37 +29,7 @@ function extractHeaderFields(rows) {
         currency: findValueBeforeMarker(textRows, '(7)') ||
             findSegmentAfterLabel(textRows, 'Валюта: наименование, код', { stopAtMarker: true }),
         contractId: sanitizeContractId(contractIdRaw),
-        baseDocument: findValue(textRows, 'Основание передачи'),
     };
-}
-function findValue(rows, label, occurrence = 0, pivot = '') {
-    const normalizedLabel = (0, upload_excel_parser_utils_1.normalize)(label);
-    const normalizedPivot = (0, upload_excel_parser_utils_1.normalize)(pivot);
-    let seen = 0;
-    for (const row of rows) {
-        for (let i = 0; i < row.length; i += 1) {
-            if (!(0, upload_excel_parser_utils_1.normalize)(row[i]).includes(normalizedLabel)) {
-                continue;
-            }
-            if (seen < occurrence) {
-                seen += 1;
-                continue;
-            }
-            const tail = row.slice(i + 1).filter((cell) => cell.trim().length > 0);
-            if (!tail.length) {
-                return '';
-            }
-            if (!normalizedPivot) {
-                return tail[0] ?? '';
-            }
-            const pivotIndex = tail.findIndex((cell) => (0, upload_excel_parser_utils_1.normalize)(cell) === normalizedPivot);
-            if (pivotIndex >= 0 && tail[pivotIndex + 1]) {
-                return tail[pivotIndex + 1];
-            }
-            return tail[0] ?? '';
-        }
-    }
-    return '';
 }
 function parseNumberDatePair(value) {
     const cleaned = cleanupFieldValue(value);
