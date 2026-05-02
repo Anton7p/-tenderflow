@@ -87,6 +87,7 @@
             printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu %s stable\n' "$arch" "$codename" \
               > /etc/apt/sources.list.d/docker.list
           args:
+            executable: /bin/bash
             creates: /etc/apt/sources.list.d/docker.list
           when: ansible_distribution == 'Ubuntu'
 
@@ -190,6 +191,8 @@
           echo "Neither ssh nor sshd unit is active" >&2
           exit 1
         fi
+      args:
+        executable: /bin/bash
       listen: Validate and reload sshd
 
     - name: Reload nginx

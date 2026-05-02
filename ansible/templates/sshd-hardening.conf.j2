@@ -3,7 +3,7 @@ PubkeyAuthentication yes
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 ChallengeResponseAuthentication no
-{% if ansible_os_family == 'Debian' %}
+{% if ansible_facts['os_family'] == 'Debian' %}
 # Debian/Ubuntu: allow root only with keys when deploying as root
 PermitRootLogin prohibit-password
 {% endif %}
