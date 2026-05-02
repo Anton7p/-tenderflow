@@ -1,0 +1,99 @@
+# Деплой на VPS: Ansible ставит ключ, отключает парольный SSH, поднимает Docker,
+# настраивает системный nginx и Certbot (HTTPS).
+#
+# Секреты репозитория (Settings → Secrets and variables → Actions):
+#   DOMAIN_NAME       — домен (A-запись на IP сервера)
+#   IP_SERVER         — только IP или hostname SSH, например: 193.233.218.96
+#   SSH_PASSWORD      — пароль SSH пользователя (первые деплои; после входа по ключу секрет можно удалить)
+#   SSH_PRIVATE_KEY   — приватный ключ (пара к SSH_PUBLIC_KEY)
+#   SSH_PUBLIC_KEY    — публичный ключ → authorized_keys
+# Опционально:
+#   SSH_USER          — пользователь SSH (по умолчанию root)
+#   CERTBOT_EMAIL     — email для Let's Encrypt
+# Дополнительно: IP_SERVER может быть JSON {"address":"...","password":"..."} — тогда пароль из JSON,
+# иначе используется SSH_PASSWORD.
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Ansible and tools
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ansible-core sshpass rsync
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r ansible/requirements.yml
+
+      - name: Write SSH private key for Ansible
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_ci_key
+          chmod 600 ~/.ssh/deploy_ci_key
+
+      - name: Generate Ansible inventory
+        env:
+          IP_SERVER_RAW: ${{ secrets.IP_SERVER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_USER_SECRET: ${{ secrets.SSH_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${SSH_USER_SECRET:-root}"
+          INV="${GITHUB_WORKSPACE}/ansible/inventory.ini"
+
+          DEPLOY_HOST=""
+          PASS_FROM_JSON=""
+          RAW="${IP_SERVER_RAW:-}"
+          RAW_TRIMMED="$(echo "$RAW" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^=//')"
+          if [ "${RAW_TRIMMED#\{}" != "$RAW_TRIMMED" ]; then
+            DEPLOY_HOST="$(python3 -c "import json,sys; d=json.loads(sys.argv[1]); print(d.get('address',''))" "$RAW_TRIMMED")"
+            PASS_FROM_JSON="$(python3 -c "import json,sys; d=json.loads(sys.argv[1]); print(d.get('password','') or '')" "$RAW_TRIMMED")"
+          else
+            DEPLOY_HOST="$RAW_TRIMMED"
+          fi
+          if [ -z "$DEPLOY_HOST" ]; then
+            echo "IP_SERVER: укажите IP или hostname (например 193.233.218.96) или JSON с полем address" >&2
+            exit 1
+          fi
+
+          EFFECTIVE_PASS="${SSH_PASSWORD:-}"
+          EFFECTIVE_PASS="$(echo "$EFFECTIVE_PASS" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^=//')"
+          if [ -n "${PASS_FROM_JSON:-}" ]; then
+            EFFECTIVE_PASS="$PASS_FROM_JSON"
+          fi
+
+          echo "[tenderflow]" > "$INV"
+          LINE="${DEPLOY_HOST} ansible_user=${USER_NAME} ansible_ssh_private_key_file=${HOME}/.ssh/deploy_ci_key"
+          if [ -n "$EFFECTIVE_PASS" ]; then
+            LINE="${LINE} ansible_ssh_pass=${EFFECTIVE_PASS}"
+          fi
+          echo "$LINE" >> "$INV"
+
+      - name: Run Ansible playbook
+        env:
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          APP_HTTP_PORT: "8080"
+        working-directory: ansible
+        run: ansible-playbook playbook.yml -v

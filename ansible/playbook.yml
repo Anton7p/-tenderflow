@@ -1,0 +1,198 @@
+---
+# Деплой Tenderflow: первый прогон — ключ SSH, hardening, Docker, nginx, certbot.
+# Повторные прогоны — только rsync кода и docker compose (новые образы), без SSH/nginx/certbot.
+#
+# Секреты GitHub: DOMAIN_NAME, IP_SERVER (только IP/hostname), SSH_PASSWORD,
+# SSH_PRIVATE_KEY, SSH_PUBLIC_KEY. Опционально: SSH_USER, CERTBOT_EMAIL
+
+- name: Deploy Tenderflow
+  hosts: tenderflow
+  become: true
+  gather_facts: true
+
+  vars:
+    app_path: /opt/tenderflow
+    initial_setup_flag: /var/lib/tenderflow/initial_setup_complete.flag
+    app_http_port: "{{ lookup('env', 'APP_HTTP_PORT') | default('8080', true) }}"
+    domain_name: "{{ lookup('env', 'DOMAIN_NAME') | mandatory }}"
+    ssh_public_key: "{{ lookup('env', 'SSH_PUBLIC_KEY') | mandatory }}"
+    certbot_email: "{{ lookup('env', 'CERTBOT_EMAIL') | default('noreply@' + domain_name, true) }}"
+
+  tasks:
+    - name: Check if initial server setup already finished
+      ansible.builtin.stat:
+        path: "{{ initial_setup_flag }}"
+      register: initial_setup_done
+
+    - name: First-time provisioning (SSH, Docker, nginx, TLS)
+      when: not initial_setup_done.stat.exists
+      block:
+        - name: Ensure runtime dirs exist
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+            mode: "0755"
+          loop:
+            - /var/lib/tenderflow
+            - "{{ app_path }}"
+            - /var/www/html
+
+        - name: Install public SSH key for the Ansible user
+          ansible.posix.authorized_key:
+            user: "{{ ansible_user }}"
+            key: "{{ ssh_public_key | trim }}"
+            state: present
+            exclusive: false
+
+        - name: Disable password authentication (SSH keys only)
+          ansible.builtin.template:
+            src: sshd-hardening.conf.j2
+            dest: /etc/ssh/sshd_config.d/99-tenderflow.conf
+            mode: "0644"
+          notify: Validate and reload sshd
+
+        - name: Apply SSH hardening before Docker/nginx (existing session stays open)
+          ansible.builtin.meta: flush_handlers
+
+        - name: Install base packages
+          ansible.builtin.apt:
+            name:
+              - ca-certificates
+              - curl
+              - gnupg
+              - rsync
+              - nginx
+              - certbot
+              - python3-certbot-nginx
+            state: present
+            update_cache: true
+
+        - name: Ensure Docker apt keyring dir exists
+          ansible.builtin.file:
+            path: /etc/apt/keyrings
+            state: directory
+            mode: "0755"
+
+        - name: Download Docker GPG key
+          ansible.builtin.get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/keyrings/docker.asc
+            mode: "0644"
+
+        - name: Configure Docker apt repository (Ubuntu)
+          ansible.builtin.shell: |
+            set -euo pipefail
+            codename="$(. /etc/os-release && echo "${VERSION_CODENAME:-jammy}")"
+            arch="$(dpkg --print-architecture)"
+            printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu %s stable\n' "$arch" "$codename" \
+              > /etc/apt/sources.list.d/docker.list
+          args:
+            creates: /etc/apt/sources.list.d/docker.list
+          when: ansible_distribution == 'Ubuntu'
+
+        - name: Install Docker Engine and Compose plugin (Ubuntu)
+          ansible.builtin.apt:
+            name:
+              - docker-ce
+              - docker-ce-cli
+              - containerd.io
+              - docker-buildx-plugin
+              - docker-compose-plugin
+            state: present
+            update_cache: true
+          when: ansible_distribution == 'Ubuntu'
+
+        - name: Ensure Docker service is running
+          ansible.builtin.service:
+            name: docker
+            state: started
+            enabled: true
+
+        - name: Remove default nginx site if present
+          ansible.builtin.file:
+            path: /etc/nginx/sites-enabled/default
+            state: absent
+          notify: Reload nginx
+
+        - name: Configure nginx reverse proxy (HTTP, ACME + upstream to Docker)
+          ansible.builtin.template:
+            src: nginx-tenderflow.conf.j2
+            dest: /etc/nginx/sites-available/tenderflow.conf
+            mode: "0644"
+          notify: Reload nginx
+
+        - name: Enable tenderflow site
+          ansible.builtin.file:
+            src: /etc/nginx/sites-available/tenderflow.conf
+            dest: /etc/nginx/sites-enabled/tenderflow.conf
+            state: link
+          notify: Reload nginx
+
+        - name: Reload nginx after site configuration
+          ansible.builtin.meta: flush_handlers
+
+        - name: Obtain TLS certificate and enable HTTPS redirect (certbot)
+          ansible.builtin.command: >-
+            certbot --nginx
+            -d {{ domain_name }}
+            --non-interactive
+            --agree-tos
+            --email {{ certbot_email }}
+            --redirect
+          register: certbot_cmd
+          changed_when: >-
+            'Congratulations' in certbot_cmd.stdout | default('')
+            or 'Successfully received certificate' in certbot_cmd.stdout | default('')
+          failed_when: certbot_cmd.rc != 0
+
+        - name: Flag — initial setup finished (next deploys only refresh containers)
+          ansible.builtin.copy:
+            dest: "{{ initial_setup_flag }}"
+            content: |
+              initial_setup_complete=true
+              completed_at={{ ansible_date_time.iso8601 }}
+            mode: "0644"
+
+    - name: Sync application sources to server
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../"
+        dest: "{{ app_path }}/"
+        delete: false
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.github"
+          - "--exclude=node_modules"
+          - "--exclude=backend/node_modules"
+          - "--exclude=frontend/node_modules"
+          - "--exclude=backend/dist"
+          - "--exclude=frontend/dist"
+          - "--exclude=.env"
+          - "--exclude=ansible/inventory.ini"
+
+    - name: Build and start application containers
+      ansible.builtin.command: docker compose up -d --build
+      args:
+        chdir: "{{ app_path }}"
+      environment:
+        HTTP_PORT: "{{ app_http_port }}"
+
+  handlers:
+    - name: Validate and reload sshd
+      ansible.builtin.shell: |
+        set -euo pipefail
+        test -x /usr/sbin/sshd
+        /usr/sbin/sshd -t
+        if systemctl is-active --quiet ssh; then
+          systemctl reload ssh
+        elif systemctl is-active --quiet sshd; then
+          systemctl reload sshd
+        else
+          echo "Neither ssh nor sshd unit is active" >&2
+          exit 1
+        fi
+      listen: Validate and reload sshd
+
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
