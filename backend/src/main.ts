@@ -19,7 +19,6 @@ async function bootstrap() {
 
   const port = 3001;
   await app.listen(port, '0.0.0.0');
-  // eslint-disable-next-line no-console
   console.log(`Backend started on http://0.0.0.0:${port}/api`);
 }
 

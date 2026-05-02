@@ -12,7 +12,11 @@ import { memoryStorage } from 'multer';
 import { Response } from 'express';
 import { BuildUpdWordDocxUseCase } from './application/use-cases/build-upd-word-docx.use-case';
 import { ParseExcelUseCase } from './application/use-cases/parse-excel.use-case';
-import { DocxTemplateFieldsDto, GenerateDocxRequestDto, UploadExcelResponseDto } from './upload-excel.types';
+import {
+  DocxTemplateFieldsDto,
+  GenerateDocxRequestDto,
+  UploadExcelResponseDto,
+} from './upload-excel.types';
 import { buildDocxTemplateFields } from './infrastructure/docx/template-fields/docx-template-fields';
 
 const EDITABLE_DOCX_KEYS = [
@@ -57,7 +61,9 @@ const EDITABLE_DOCX_KEYS = [
   'item_total_with_vat',
 ] as const satisfies ReadonlyArray<keyof DocxTemplateFieldsDto>;
 
-function buildEditableDocxFields(fields: Partial<DocxTemplateFieldsDto>): Partial<DocxTemplateFieldsDto> {
+function buildEditableDocxFields(
+  fields: Partial<DocxTemplateFieldsDto>,
+): Partial<DocxTemplateFieldsDto> {
   const result: Partial<DocxTemplateFieldsDto> = {};
   for (const key of EDITABLE_DOCX_KEYS) {
     result[key] = fields[key];
@@ -71,16 +77,17 @@ function buildGeneratedDocxFileName(payload: GenerateDocxRequestDto): string {
     payload.headerFields?.documentNumber?.trim() ||
     '--';
   const rawDate =
-    payload.docxFields?.invoice_date?.trim() ||
-    payload.headerFields?.documentDate?.trim() ||
-    '';
+    payload.docxFields?.invoice_date?.trim() || payload.headerFields?.documentDate?.trim() || '';
   const humanDate = toRussianHumanDate(rawDate) || '--';
   const baseName = `УПД (статус 1) № ${number} от ${humanDate}`;
   return sanitizeFileName(`${baseName}.docx`);
 }
 
 function sanitizeFileName(value: string): string {
-  return value.replace(/[<>:"/\\|?*\u0000-\u001F]/g, ' ').replace(/\s+/g, ' ').trim();
+  return value
+    .replace(/[<>:"/\\|?*\u0000-\u001F]/g, ' ') // eslint-disable-line no-control-regex -- illegal Windows filename chars + controls
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function toRussianHumanDate(input: string): string {
@@ -161,10 +168,7 @@ export class UploadExcelController {
   }
 
   @Post('generate-docx')
-  async generateDocx(
-    @Body() payload: GenerateDocxRequestDto,
-    @Res() res: Response,
-  ): Promise<void> {
+  async generateDocx(@Body() payload: GenerateDocxRequestDto, @Res() res: Response): Promise<void> {
     if (!payload?.tableData?.length) {
       throw new BadRequestException('Нет данных для формирования документа');
     }

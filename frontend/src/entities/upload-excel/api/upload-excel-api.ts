@@ -79,7 +79,6 @@ export async function uploadExcelFile(file: File): Promise<UploadExcelResponse> 
 
   const payload = (await response.json()) as UploadExcelResponse;
 
-  // eslint-disable-next-line no-console
   console.log('[upload-excel/api] upload response', {
     hasTableData: Array.isArray(payload?.tableData),
     tableDataLength: payload?.tableData?.length ?? 0,
@@ -94,7 +93,9 @@ export async function uploadExcelFile(file: File): Promise<UploadExcelResponse> 
   return payload;
 }
 
-export async function generateWordDocx(payload: GenerateDocxRequest): Promise<GenerateDocxResponse> {
+export async function generateWordDocx(
+  payload: GenerateDocxRequest,
+): Promise<GenerateDocxResponse> {
   const response = await fetch(`${API_BASE_URL}/upload-excel/generate-docx`, {
     method: 'POST',
     headers: {
@@ -108,9 +109,7 @@ export async function generateWordDocx(payload: GenerateDocxRequest): Promise<Ge
   }
 
   const blob = await response.blob();
-  const fileName = parseFileNameFromContentDisposition(
-    response.headers.get('Content-Disposition'),
-  );
+  const fileName = parseFileNameFromContentDisposition(response.headers.get('Content-Disposition'));
   return {
     blob,
     fileName: fileName || 'upd-template.docx',
