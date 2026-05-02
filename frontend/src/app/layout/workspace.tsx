@@ -2,14 +2,21 @@ import { Card } from 'antd';
 
 interface WorkspaceProps {
   children: React.ReactNode;
+  transparent?: boolean;
 }
 
-export const Workspace = ({ children }: WorkspaceProps) => {
+export const Workspace = ({ children, transparent = false }: WorkspaceProps) => {
   return (
-    <Card 
+    <Card
       variant="borderless"
-      styles={{ body: { padding: '16px' } }}
-      style={{ height: '100%', backgroundColor: 'var(--color-bg-container)', display: 'flex', flexDirection: 'column' }}
+      styles={{ body: { padding: transparent ? 0 : '16px' } }}
+      style={{
+        height: '100%',
+        backgroundColor: transparent ? 'transparent' : 'var(--color-bg-container)',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: transparent ? 'none' : undefined,
+      }}
     >
       {children}
     </Card>

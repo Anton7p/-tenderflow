@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Layout } from 'antd';
 import { Header, Tabs, Workspace } from './layout';
-import { UploadExcelPage, PaymentAccountPage, SettingsPage } from '../pages';
+import { UploadExcelPage, PaymentAccountPage, SettingsPage, MainPage } from '../pages';
 import { BankOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
@@ -13,10 +13,13 @@ const NAV_TABS = [
 ];
 
 function App() {
-  const [activeTab, setActiveTab] = useState('upd-downloads');
+  const [activeTab, setActiveTab] = useState('main');
+  const isMainTab = activeTab === 'main';
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'main':
+        return <MainPage onOpenSection={setActiveTab} />;
       case 'upd-downloads':
         return <UploadExcelPage />;
       case 'payment-account':
@@ -24,19 +27,26 @@ function App() {
       case 'settings':
         return <SettingsPage />;
       default:
-        return <UploadExcelPage />;
+        return <MainPage onOpenSection={setActiveTab} />;
     }
   };
 
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg-layout)' }}>
-      <Header title="Управление тендерной документацией" />
-      <Content style={{ margin: 0, padding: 0, height: 'calc(100vh - 48px)', overflow: 'hidden' }}>
+      {!isMainTab ? <Header title="Управление тендерной документацией" /> : null}
+      <Content
+        style={{
+          margin: 0,
+          padding: 0,
+          height: isMainTab ? '100vh' : 'calc(100vh - 48px)',
+          overflow: 'hidden',
+        }}
+      >
         <div style={{ width: '100%', maxWidth: '1440px', margin: '0 auto', height: '100%' }}>
-          <Tabs tabs={NAV_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
-          <Workspace>
-            {renderContent()}
-          </Workspace>
+          {!isMainTab ? (
+            <Tabs tabs={NAV_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+          ) : null}
+          <Workspace transparent={isMainTab}>{renderContent()}</Workspace>
         </div>
       </Content>
     </Layout>
