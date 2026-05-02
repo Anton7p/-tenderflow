@@ -1,0 +1,11 @@
+# Локальные переопределения Docker Compose.
+# Скопируйте в compose.override.yml (файл в .gitignore и не попадёт в репозиторий):
+#   Windows:  copy compose.override.example.yml compose.override.yml
+#   bash:     cp compose.override.example.yml compose.override.yml
+#
+# Compose автоматически подмешивает compose.override.yml рядом с docker-compose.yml.
+
+services:
+  backend:
+    ports:
+      - "127.0.0.1:3001:3001"
