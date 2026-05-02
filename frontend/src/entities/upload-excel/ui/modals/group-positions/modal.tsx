@@ -82,6 +82,14 @@ const MONEY_FIELDS: Array<keyof UploadExcelRowFormValues> = [
   'totalWithTax',
 ];
 
+function setFormField<K extends keyof UploadExcelRowFormValues>(
+  target: Partial<UploadExcelRowFormValues>,
+  key: K,
+  value: UploadExcelRowFormValues[K] | undefined,
+): void {
+  target[key] = value;
+}
+
 function buildInitialFormValues(rows: UploadExcelRowModel[]): Partial<UploadExcelRowFormValues> {
   if (!rows.length) {
     return {};
@@ -93,21 +101,26 @@ function buildInitialFormValues(rows: UploadExcelRowModel[]): Partial<UploadExce
   const keys = Object.keys(firstRow).filter((key) => key !== 'id') as Array<keyof UploadExcelRowFormValues>;
   for (const key of keys) {
     if (MONEY_FIELDS.includes(key)) {
-      result[key] = rows.reduce(
-        (sum, row) => sum + (Number(row[key as keyof UploadExcelRowModel]) || 0),
+      const sum = rows.reduce(
+        (acc, row) => acc + (Number(row[key as keyof UploadExcelRowModel]) || 0),
         0,
-      ) as UploadExcelRowFormValues[typeof key];
+      );
+      setFormField(result, key, sum as UploadExcelRowFormValues[typeof key]);
       continue;
     }
 
     const baseValue = firstRow[key as keyof UploadExcelRowModel];
     const isSameForAll = rows.every((row) => row[key as keyof UploadExcelRowModel] === baseValue);
     if (isSameForAll) {
-      result[key] = baseValue as UploadExcelRowFormValues[typeof key];
+      setFormField(result, key, baseValue as UploadExcelRowFormValues[typeof key]);
       continue;
     }
 
-    result[key] = (typeof baseValue === 'number' ? undefined : '') as UploadExcelRowFormValues[typeof key];
+    if (typeof baseValue === 'number') {
+      setFormField(result, key, undefined);
+    } else {
+      setFormField(result, key, '' as UploadExcelRowFormValues[typeof key]);
+    }
   }
 
   return result;

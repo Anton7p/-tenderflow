@@ -39,13 +39,6 @@ export function Modal({
       style={{ top: 0 }}
       styles={{
         mask: { backgroundColor: 'rgba(0, 0, 0, 0.45)' },
-        content: {
-          padding: 0,
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          ...contentStyle,
-        },
         body: {
           padding: 0,
           display: 'flex',
@@ -54,6 +47,7 @@ export function Modal({
           ...(fixedShell
             ? { flex: '1 1 auto', minHeight: 0 }
             : { minHeight: height }),
+          ...contentStyle,
         },
       }}
       closeIcon={false}

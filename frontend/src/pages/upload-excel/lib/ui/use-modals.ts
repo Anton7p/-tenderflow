@@ -64,7 +64,7 @@ interface ExportWordModalProps {
   onCancel: () => void;
   onSubmit: (values: unknown | undefined) => void;
   onApply: (values: unknown | undefined) => void;
-  state?: unknown;
+  state?: { loading?: boolean };
 }
 
 export function useModals(props: PageUIComponentProps) {
