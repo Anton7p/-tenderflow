@@ -106,12 +106,25 @@
   padding: 4px 6px;
   border: 1px solid var(--panel-border);
   border-top: none;
-  white-space: nowrap;
+  vertical-align: middle;
   overflow: hidden;
-  text-overflow: ellipsis;
   background: var(--panel-surface);
   color: var(--panel-text);
   font-size: 11px;
+}
+
+.cellInner {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellInnerOverflow {
+  cursor: help;
 }
 
 .table tbody tr:nth-child(even) td {

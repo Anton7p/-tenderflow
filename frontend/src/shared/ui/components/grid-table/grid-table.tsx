@@ -2,6 +2,7 @@ import type { DragEvent } from 'react';
 import { clsx } from 'clsx';
 import { flexRender } from '@tanstack/react-table';
 import type { Header, Table } from '@tanstack/react-table';
+import { CellOverflowTooltip } from './cell-overflow-tooltip';
 import styles from './grid-table.module.css';
 
 export interface GridTableProps<TData> {
@@ -150,7 +151,9 @@ export function GridTable<TData>({
                     data-numeric={meta?.isNumeric}
                     data-name={meta?.isName}
                   >
-                    {flexRender(columnDef.cell, cell.getContext())}
+                    <CellOverflowTooltip>
+                      {flexRender(columnDef.cell, cell.getContext())}
+                    </CellOverflowTooltip>
                   </td>
                 );
               })}
@@ -169,9 +172,11 @@ export function GridTable<TData>({
                   style={{ width: column.getSize() !== 150 ? column.getSize() : undefined }}
                   data-numeric={meta?.isNumeric}
                 >
-                  {typeof footer === 'function'
-                    ? footer({ column, table, header: undefined as never })
-                    : (footer ?? null)}
+                  <CellOverflowTooltip>
+                    {typeof footer === 'function'
+                      ? footer({ column, table, header: undefined as never })
+                      : (footer ?? null)}
+                  </CellOverflowTooltip>
                 </th>
               );
             })}
