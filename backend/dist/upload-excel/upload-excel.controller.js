@@ -71,15 +71,16 @@ function buildGeneratedDocxFileName(payload) {
     const number = payload.docxFields?.invoice_number?.trim() ||
         payload.headerFields?.documentNumber?.trim() ||
         '--';
-    const rawDate = payload.docxFields?.invoice_date?.trim() ||
-        payload.headerFields?.documentDate?.trim() ||
-        '';
+    const rawDate = payload.docxFields?.invoice_date?.trim() || payload.headerFields?.documentDate?.trim() || '';
     const humanDate = toRussianHumanDate(rawDate) || '--';
     const baseName = `УПД (статус 1) № ${number} от ${humanDate}`;
     return sanitizeFileName(`${baseName}.docx`);
 }
 function sanitizeFileName(value) {
-    return value.replace(/[<>:"/\\|?*\u0000-\u001F]/g, ' ').replace(/\s+/g, ' ').trim();
+    return value
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 function toRussianHumanDate(input) {
     const raw = (input || '').trim();

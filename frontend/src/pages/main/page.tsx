@@ -1,9 +1,4 @@
-import {
-  AppstoreOutlined,
-  BankOutlined,
-  FileTextOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { AppstoreOutlined, BankOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import styles from './main.module.css';
 
@@ -25,12 +20,6 @@ const sections = [
     title: 'Расчётный счёт',
     description: 'Раздел для работы с данными расчётного счёта.',
     icon: <BankOutlined />,
-  },
-  {
-    id: 'settings',
-    title: 'Настройки',
-    description: 'Параметры приложения и системные настройки.',
-    icon: <SettingOutlined />,
   },
 ] as const;
 

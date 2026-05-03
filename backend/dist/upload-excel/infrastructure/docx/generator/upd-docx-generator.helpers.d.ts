@@ -6,3 +6,4 @@ export declare function formatRowMoneyRaw(raw: number | undefined, fallback: num
 export declare function toRussianHumanDate(input: string): string;
 export declare function buildUpdDocumentTitle(payload: ParsedExcelDocument, prebuiltTemplateFields?: Record<string, string>): string;
 export declare function extractPagesCount(value: string): string;
+export declare function extractTotalPagesFromPagesInfo(value: string): number;

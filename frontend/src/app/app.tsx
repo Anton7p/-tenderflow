@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Layout } from 'antd';
 import { Header, Tabs, Workspace } from './layout';
-import { UploadExcelPage, PaymentAccountPage, SettingsPage, MainPage } from '../pages';
-import { BankOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
+import { UploadExcelPage, PaymentAccountPage, MainPage } from '../pages';
+import { BankOutlined, FileTextOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 
 const NAV_TABS = [
   { id: 'upd-downloads', label: 'Выгрузка УПД', icon: <FileTextOutlined /> },
   { id: 'payment-account', label: 'Расчётный счёт', icon: <BankOutlined /> },
-  { id: 'settings', label: 'Настройки', icon: <SettingOutlined /> },
 ];
 
 function App() {
@@ -24,8 +23,6 @@ function App() {
         return <UploadExcelPage />;
       case 'payment-account':
         return <PaymentAccountPage />;
-      case 'settings':
-        return <SettingsPage />;
       default:
         return <MainPage onOpenSection={setActiveTab} />;
     }

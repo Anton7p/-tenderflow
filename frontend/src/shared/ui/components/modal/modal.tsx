@@ -10,6 +10,8 @@ interface ModalProps {
   height?: number | string;
   maskClosable?: boolean;
   keyboard?: boolean;
+  /** Вызывается после завершения анимации закрытия (в т.ч. при controlled open=false). */
+  afterClose?: () => void;
   /** Зафиксировать размер `.ant-modal-content` (окно не растёт и не скроллится целиком). */
   contentStyle?: CSSProperties;
 }
@@ -22,6 +24,7 @@ export function Modal({
   height = '700px',
   maskClosable = true,
   keyboard = true,
+  afterClose,
   contentStyle,
 }: ModalProps) {
   const fixedShell = Boolean(contentStyle?.height ?? contentStyle?.maxHeight);
@@ -30,6 +33,7 @@ export function Modal({
     <AntModal
       open={open}
       onCancel={onClose}
+      afterClose={afterClose}
       footer={null}
       width={width}
       centered

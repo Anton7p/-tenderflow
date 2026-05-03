@@ -15,6 +15,7 @@ export interface ModalState {
   setSelectedFile: (file: File | null) => void;
   handleCancel: () => void;
   handleSubmit: () => void;
+  handleAfterClose: () => void;
 }
 
 export interface Modal {

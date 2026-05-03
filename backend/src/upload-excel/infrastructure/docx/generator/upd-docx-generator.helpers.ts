@@ -80,6 +80,20 @@ export function extractPagesCount(value: string): string {
   return match?.[1] ?? '';
 }
 
+/** Парсит «… из 2» / «Лист 1 из 2» из pages_info; без «из N» считаем 1 страницу. */
+export function extractTotalPagesFromPagesInfo(value: string): number {
+  const raw = (value || '').trim();
+  if (!raw) {
+    return 1;
+  }
+  const ofMatch = raw.match(/из\s*(\d+)/iu);
+  if (ofMatch) {
+    const n = parseInt(ofMatch[1], 10);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  }
+  return 1;
+}
+
 function formatRussianDateParts(day: number, month: number, year: number): string {
   const months = [
     'января',

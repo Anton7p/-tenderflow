@@ -9,6 +9,7 @@ import { buildDocxTemplateFields } from '../template-fields/docx-template-fields
 import {
   buildUpdDocumentTitle,
   extractPagesCount,
+  extractTotalPagesFromPagesInfo,
   formatMoney,
   formatRowMoneyRaw,
   formatRowNumericRaw,
@@ -138,6 +139,7 @@ export class UpdDocxGeneratorAdapter implements UpdDocumentGeneratorPort {
     const updDocumentTitle = buildUpdDocumentTitle(payload, templateFields);
     const pagesInfo = (templateFields['pages_info'] ?? '').trim();
     const numPages = extractPagesCount(pagesInfo);
+    const totalPages = extractTotalPagesFromPagesInfo(pagesInfo);
 
     const uppercaseAliases: Record<string, string> = {
       INVOICE_NUMBER: templateFields['invoice_number'] ?? '',
@@ -176,6 +178,9 @@ export class UpdDocxGeneratorAdapter implements UpdDocumentGeneratorPort {
       ...uppercaseAliases,
       invoice_number: templateFields['invoice_number'] ?? '',
       upd_document_title: updDocumentTitle,
+      /** Docxtemplater: {#has_continuation_block}…{/has_continuation_block} — только если в pages_info «из N» и N > 1 */
+      has_continuation_block: totalPages > 1,
+      total_pages: totalPages,
       tableData: itemRows,
       items: itemRows,
     };

@@ -14,8 +14,9 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
     }));
-    await app.listen(3001);
-    console.log('Backend started on http://localhost:3001/api');
+    const port = 3001;
+    await app.listen(port, '0.0.0.0');
+    console.log(`Backend started on http://0.0.0.0:${port}/api`);
 }
 void bootstrap();
 //# sourceMappingURL=main.js.map

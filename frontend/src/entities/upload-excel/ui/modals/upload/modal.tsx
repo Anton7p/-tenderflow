@@ -8,18 +8,18 @@ import styles from './styles.module.css';
 export function UploadExcelModal(props: ModalProps) {
   const modal = useModal(props);
   const { state } = modal;
-  const { handleCancel, handleSubmit } = state;
+  const { handleCancel, handleSubmit, handleAfterClose } = state;
   const loading = Boolean(props.state?.loading);
 
   const customTitle = (
     <div className={styles.modalHeader}>
       <span className={styles.modalTitle}>Загрузка УПД</span>
       <div className={styles.modalActions}>
-        <Button 
-          type="primary" 
+        <Button
+          type="primary"
           className={styles.primaryButton}
           loading={loading}
-          disabled={loading}
+          disabled={loading || !state.selectedFile}
           onClick={handleSubmit}
         >
           Загрузить
@@ -35,6 +35,7 @@ export function UploadExcelModal(props: ModalProps) {
     <SharedModal
       open={state.isOpen}
       onClose={handleCancel}
+      afterClose={handleAfterClose}
       maskClosable={!loading}
       keyboard={!loading}
     >

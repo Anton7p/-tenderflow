@@ -7,6 +7,7 @@ exports.formatRowMoneyRaw = formatRowMoneyRaw;
 exports.toRussianHumanDate = toRussianHumanDate;
 exports.buildUpdDocumentTitle = buildUpdDocumentTitle;
 exports.extractPagesCount = extractPagesCount;
+exports.extractTotalPagesFromPagesInfo = extractTotalPagesFromPagesInfo;
 const docx_template_fields_1 = require("../template-fields/docx-template-fields");
 function formatNumber(value) {
     if (!Number.isFinite(value)) {
@@ -68,6 +69,18 @@ function buildUpdDocumentTitle(payload, prebuiltTemplateFields) {
 function extractPagesCount(value) {
     const match = (value || '').match(/(\d+)/u);
     return match?.[1] ?? '';
+}
+function extractTotalPagesFromPagesInfo(value) {
+    const raw = (value || '').trim();
+    if (!raw) {
+        return 1;
+    }
+    const ofMatch = raw.match(/из\s*(\d+)/iu);
+    if (ofMatch) {
+        const n = parseInt(ofMatch[1], 10);
+        return Number.isFinite(n) && n > 0 ? n : 1;
+    }
+    return 1;
 }
 function formatRussianDateParts(day, month, year) {
     const months = [

@@ -117,6 +117,7 @@ let UpdDocxGeneratorAdapter = class UpdDocxGeneratorAdapter {
         const updDocumentTitle = (0, upd_docx_generator_helpers_1.buildUpdDocumentTitle)(payload, templateFields);
         const pagesInfo = (templateFields['pages_info'] ?? '').trim();
         const numPages = (0, upd_docx_generator_helpers_1.extractPagesCount)(pagesInfo);
+        const totalPages = (0, upd_docx_generator_helpers_1.extractTotalPagesFromPagesInfo)(pagesInfo);
         const uppercaseAliases = {
             INVOICE_NUMBER: templateFields['invoice_number'] ?? '',
             SELLER_NAME: templateFields['seller_name'] ?? '',
@@ -153,6 +154,8 @@ let UpdDocxGeneratorAdapter = class UpdDocxGeneratorAdapter {
             ...uppercaseAliases,
             invoice_number: templateFields['invoice_number'] ?? '',
             upd_document_title: updDocumentTitle,
+            has_continuation_block: totalPages > 1,
+            total_pages: totalPages,
             tableData: itemRows,
             items: itemRows,
         };
