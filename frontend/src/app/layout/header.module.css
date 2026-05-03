@@ -1,73 +1,78 @@
-.header {
-  height: var(--header-height);
+.bar {
+  min-height: var(--header-height);
+  padding-top: env(safe-area-inset-top, 0px);
+  box-sizing: border-box;
   background-color: var(--header-bg);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-bottom: 1px solid var(--header-border);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
   padding: 0 20px;
 }
 
-.content {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.leftSection {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.icon {
-  font-size: 18px;
-  color: var(--color-text-primary);
-}
-
-.title {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--color-text-primary);
-  font-family: var(--font-family);
-}
-
-.searchBox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.titleRow {
+  min-width: 0;
   flex: 1;
 }
 
-.searchLabel {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family);
+.titleIcon {
+  font-size: 18px;
+  color: var(--header-text);
+  flex-shrink: 0;
 }
 
-.rightSection {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.titleText {
+  font-size: 14px;
+  color: var(--header-text);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.profileSection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.userBlock {
+  flex-shrink: 0;
 }
 
-.profileAvatar {
+.avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--color-bg-container);
+  background-color: var(--header-avatar-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--header-avatar-border);
+}
+
+.userName {
+  font-size: 13px;
+  color: var(--header-text);
+}
+
+@media (max-width: 767px) {
+  .inner {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .titleText {
+    font-size: 12px;
+  }
+
+  .userName {
+    display: none;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .titleIcon {
+    font-size: 16px;
+  }
 }

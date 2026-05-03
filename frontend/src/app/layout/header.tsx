@@ -1,7 +1,6 @@
-import { Flex, Typography } from 'antd';
+import { Flex } from 'antd';
 import { ProjectOutlined, UserOutlined } from '@ant-design/icons';
-
-const { Text } = Typography;
+import styles from './header.module.css';
 
 interface HeaderProps {
   title: string;
@@ -10,48 +9,19 @@ interface HeaderProps {
 
 export const Header = ({ title, userName = 'Администратор' }: HeaderProps) => {
   return (
-    <Flex
-      align="center"
-      justify="center"
-      style={{
-        height: '48px',
-        backgroundColor: 'var(--header-bg)',
-        borderBottom: '1px solid var(--header-border)',
-      }}
-    >
-      <Flex
-        align="center"
-        justify="space-between"
-        style={{
-          width: '100%',
-          maxWidth: '1440px',
-          padding: '0 20px',
-        }}
-      >
-        <Flex align="center" gap={12}>
-          <ProjectOutlined style={{ fontSize: '18px', color: 'var(--header-text)' }} />
-          <Text strong style={{ fontSize: '14px', color: 'var(--header-text)' }}>
-            {title}
-          </Text>
+    <Flex align="center" justify="center" className={styles.bar}>
+      <Flex align="center" justify="space-between" className={styles.inner}>
+        <Flex align="center" gap={12} className={styles.titleRow}>
+          <ProjectOutlined className={styles.titleIcon} aria-hidden />
+          <strong className={styles.titleText}>{title}</strong>
         </Flex>
 
-        <Flex align="center" gap={16}>
+        <Flex align="center" gap={16} className={styles.userBlock}>
           <Flex align="center" gap={8}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                backgroundColor: 'var(--header-avatar-bg)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid var(--header-avatar-border)',
-              }}
-            >
-              <UserOutlined style={{ color: 'var(--color-primary)' }} />
+            <div className={styles.avatar}>
+              <UserOutlined style={{ color: 'var(--color-primary)' }} aria-hidden />
             </div>
-            <Text style={{ fontSize: '13px', color: 'var(--header-text)' }}>{userName}</Text>
+            <span className={styles.userName}>{userName}</span>
           </Flex>
         </Flex>
       </Flex>

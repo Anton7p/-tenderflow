@@ -53,3 +53,24 @@
 .pageLayoutFooter {
   margin-top: 20px;
 }
+
+@media (max-width: 767px) {
+  .pageLayoutHeader {
+    margin-bottom: 12px;
+  }
+
+  .pageLayoutTools {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .pageLayoutFilter {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .pageLayoutActions {
+    width: 100%;
+  }
+}

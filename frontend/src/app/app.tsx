@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import { Header, Tabs, Workspace } from './layout';
 import { UploadExcelPage, PaymentAccountPage, MainPage } from '../pages';
 import { BankOutlined, FileTextOutlined } from '@ant-design/icons';
+import layoutStyles from './app-layout.module.css';
 
 const { Content } = Layout;
 
@@ -29,28 +30,22 @@ function App() {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg-layout)' }}>
+    <Layout
+      className={layoutStyles.layoutRoot}
+      style={{ backgroundColor: 'var(--color-bg-layout)' }}
+    >
       {!isMainTab ? <Header title="Управление тендерной документацией" /> : null}
-      <Content
-        style={{
-          margin: 0,
-          padding: 0,
-          height: isMainTab ? '100vh' : 'calc(100vh - 48px)',
-          overflow: 'hidden',
-        }}
-      >
+      <Content className={isMainTab ? layoutStyles.contentMain : layoutStyles.contentTabs}>
         {isMainTab ? (
-          <div style={{ width: '100%', height: '100%', minWidth: 0 }}>
+          <div className={layoutStyles.shell}>
             <Workspace transparent>{renderContent()}</Workspace>
           </div>
         ) : (
           <div
+            className={layoutStyles.shell}
             style={{
-              width: '100%',
               maxWidth: 'var(--layout-max-width)',
               margin: '0 auto',
-              height: '100%',
-              minWidth: 0,
             }}
           >
             <Tabs tabs={NAV_TABS} activeTab={activeTab} onTabChange={setActiveTab} />

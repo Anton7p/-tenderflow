@@ -1,0 +1,15 @@
+.row {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.moreBtn {
+  border-color: var(--panel-border-strong, var(--color-border)) !important;
+  color: var(--panel-text, var(--color-text-primary)) !important;
+}
+
+.moreBtn:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background: var(--color-primary-soft, rgba(13, 82, 153, 0.12)) !important;
+}

@@ -145,3 +145,26 @@
   white-space: nowrap;
   vertical-align: bottom;
 }
+
+@media (max-width: 767px) {
+  .toolbarInner {
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  .search {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .columnsBtn {
+    align-self: flex-start;
+  }
+
+  .dragHint {
+    width: 100%;
+    white-space: normal;
+    font-size: 10px;
+  }
+}

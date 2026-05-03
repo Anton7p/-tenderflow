@@ -2,11 +2,21 @@
   background-color: var(--color-bg-layout);
   border-bottom: 1px solid var(--color-border);
   padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.tabsContainer::-webkit-scrollbar {
+  height: 4px;
 }
 
 .tabs {
   display: flex;
+  flex-wrap: nowrap;
   gap: 4px;
+  min-width: min-content;
 }
 
 .tab {
@@ -41,4 +51,15 @@
 
 .tabLabel {
   white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .tab {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .tabIcon {
+    font-size: 13px;
+  }
 }

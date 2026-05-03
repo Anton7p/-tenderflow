@@ -4,7 +4,7 @@
 
 .modal :global(.ant-modal) {
   width: 100% !important;
-  max-width: 90vw !important;
+  max-width: min(1200px, 90vw) !important;
   padding: 0 !important;
 }
 
@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
   overflow: hidden;
   border-radius: 1px;
   border: 1px solid var(--modal-border);
@@ -51,4 +52,45 @@
 
 .closeIcon:hover {
   opacity: 0.8;
+}
+
+@media (max-width: 767px) {
+  .modal :global(.ant-modal-wrap) {
+    padding: max(8px, env(safe-area-inset-top, 0px)) max(8px, env(safe-area-inset-right, 0px))
+      max(8px, env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal :global(.ant-modal) {
+    max-width: none !important;
+    width: calc(
+      100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)
+    ) !important;
+    width: calc(
+      100dvw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)
+    ) !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    top: 0;
+  }
+
+  .modal :global(.ant-modal-content) {
+    max-height: calc(
+      100vh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+    max-height: calc(
+      100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+    min-height: 0;
+    border-radius: 8px;
+  }
+
+  .modal :global(.ant-modal-header) {
+    padding: 10px 12px;
+  }
+
+  .modal :global(.ant-modal-body) {
+    min-height: 0;
+  }
 }

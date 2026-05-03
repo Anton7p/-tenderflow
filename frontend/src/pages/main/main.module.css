@@ -115,3 +115,31 @@
   font-size: 18px;
   flex-shrink: 0;
 }
+
+@media (max-width: 767px) {
+  .darkBandTitle {
+    font-size: 20px;
+  }
+
+  .darkBandMuted {
+    font-size: 13px;
+  }
+
+  .darkBandConstrain {
+    padding: 22px var(--main-page-padding) 18px;
+  }
+
+  .tileRow {
+    padding: 14px 14px;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .tileTitle {
+    font-size: 14px;
+  }
+
+  .tileDesc {
+    font-size: 12px;
+  }
+}

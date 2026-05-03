@@ -6,17 +6,41 @@
   max-width: 100%;
   min-width: 0;
   max-height: calc(100vh - 175px);
+  max-height: calc(100dvh - 175px);
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-gutter: stable;
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   background: var(--color-bg-container);
   box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 }
 
 .shellHorizontalScroll {
   overflow-x: auto;
+}
+
+@media (max-width: 767px) {
+  .shell {
+    max-height: calc(100vh - 248px);
+    max-height: calc(100dvh - 248px);
+    overflow-x: auto;
+    border-radius: 4px;
+  }
+
+  .table {
+    font-size: 10px;
+  }
+
+  .table thead th {
+    padding: 5px 4px;
+    font-size: 9px;
+  }
+
+  .table td {
+    padding: 3px 4px;
+    font-size: 10px;
+  }
 }
 
 .table {

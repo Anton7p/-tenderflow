@@ -107,6 +107,16 @@ body {
   background: var(--color-bg-layout);
 }
 
+/*
+ * Резерв под вертикальный скролл только на десктопе (нет «прыжка» ширины).
+ * На тач/узкой ширине — без scrollbar-gutter: overlay-скролл не даёт лишнего отступа.
+ */
+@media (min-width: 768px) {
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
 button,
 .ant-btn {
   box-shadow: none !important;
@@ -234,4 +244,11 @@ textarea:focus-visible,
 .app-notification.ant-notification-notice .ant-notification-notice-description {
   color: var(--notification-desc-text) !important;
   font-size: 13px !important;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --main-page-padding: 14px;
+    --spacing-lg: 12px;
+  }
 }

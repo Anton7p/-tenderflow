@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 import { Button, Form, Input, Spin } from 'antd';
 import { Modal as SharedModal } from '@shared/ui';
-import type { CounterpartiesModel, DocxTemplateFieldsModel, FooterFieldsModel, HeaderFieldsModel } from '@entities/upload-excel/api';
+import type {
+  CounterpartiesModel,
+  DocxTemplateFieldsModel,
+  FooterFieldsModel,
+  HeaderFieldsModel,
+} from '@entities/upload-excel/api';
 import uploadStyles from '../upload/styles.module.css';
 import layoutStyles from './modal-layout.module.css';
 import type { DocxFieldDef } from './export-word-field-groups';
@@ -118,13 +123,21 @@ export function ExportWordModal(props: ExportWordModalProps) {
   );
 
   return (
-    <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px" maskClosable={!loading} keyboard={!loading}>
+    <SharedModal
+      open={isOpen}
+      onClose={onCancel}
+      width="1200px"
+      height="700px"
+      maskClosable={!loading}
+      keyboard={!loading}
+    >
       {customTitle}
-      <div style={{ padding: '0 14px 14px', overflow: 'hidden' }}>
+      <div className={layoutStyles.modalBodyOuter}>
         <Spin spinning={loading} tip="Формирование документа на сервере…">
           <Form
             form={form}
             layout="vertical"
+            labelWrap
             size="small"
             onFinish={(values) => {
               const editedHeader = values.headerFields ?? {};
@@ -144,19 +157,21 @@ export function ExportWordModal(props: ExportWordModalProps) {
           >
             <div className={layoutStyles.formBodyScroll}>
               <div className={layoutStyles.sheet}>
-                  <div className={`${layoutStyles.sectionDivider} ${layoutStyles.sectionDividerLead}`}>
-                    Шапка документа (счёт-фактура, исправление, статус)
-                  </div>
-                  <div className={layoutStyles.invoiceBand}>
-                    <div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                        <Form.Item
-                          label={<span className={layoutStyles.labelText}>Счет-фактура №</span>}
-                          name={['docxFields', 'invoice_number']}
-                          className={layoutStyles.compactItem}
-                        >
-                          <Input placeholder="номер" />
-                        </Form.Item>
+                <div
+                  className={`${layoutStyles.sectionDivider} ${layoutStyles.sectionDividerLead}`}
+                >
+                  Шапка документа (счёт-фактура, исправление, статус)
+                </div>
+                <div className={layoutStyles.invoiceBand}>
+                  <div>
+                    <div className={layoutStyles.invoiceRowGrid}>
+                      <Form.Item
+                        label={<span className={layoutStyles.labelText}>Счет-фактура №</span>}
+                        name={['docxFields', 'invoice_number']}
+                        className={layoutStyles.compactItem}
+                      >
+                        <Input placeholder="номер" />
+                      </Form.Item>
                       <Form.Item
                         label={<span className={layoutStyles.labelText}>от</span>}
                         name={['docxFields', 'invoice_date']}
@@ -165,7 +180,7 @@ export function ExportWordModal(props: ExportWordModalProps) {
                         <Input placeholder="дата" />
                       </Form.Item>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 8 }}>
+                    <div className={layoutStyles.invoiceRowGridTight}>
                       <Form.Item
                         label={<span className={layoutStyles.labelText}>Исправление №</span>}
                         name={['headerFields', 'correctionNumber']}
@@ -182,7 +197,9 @@ export function ExportWordModal(props: ExportWordModalProps) {
                       </Form.Item>
                     </div>
                     <Form.Item
-                      label={<span className={layoutStyles.labelText}>Статус / служебная отметка</span>}
+                      label={
+                        <span className={layoutStyles.labelText}>Статус / служебная отметка</span>
+                      }
                       name={['headerFields', 'status']}
                       className={layoutStyles.compactItem}
                     >
@@ -190,68 +207,73 @@ export function ExportWordModal(props: ExportWordModalProps) {
                     </Form.Item>
                   </div>
                   <div className={layoutStyles.metaHint}>
-                    Поля с номерами{' '}
-                    <strong>(1)</strong>, <strong>(6)</strong>, <strong>[10]</strong> и т.д. соответствуют графам бланка
-                    универсального передаточного документа (счёт-фактура).
+                    Поля с номерами <strong>(1)</strong>, <strong>(6)</strong>,{' '}
+                    <strong>[10]</strong> и т.д. соответствуют графам бланка универсального
+                    передаточного документа (счёт-фактура).
                   </div>
-                  </div>
+                </div>
               </div>
 
-                <div className={layoutStyles.twoCols}>
-                  <div className={layoutStyles.col}>
-                    <div className={layoutStyles.colHead}>Продавец · грузоотправитель · грузополучатель</div>
-                    {HEADER_LEFT_DOCX.map((def) => (
-                      <DocxFieldItem key={def.key} def={def} />
-                    ))}
+              <div className={layoutStyles.twoCols}>
+                <div className={layoutStyles.col}>
+                  <div className={layoutStyles.colHead}>
+                    Продавец · грузоотправитель · грузополучатель
                   </div>
-                  <div className={layoutStyles.col}>
-                    <div className={layoutStyles.colHead}>Покупатель · валюта</div>
-                    {HEADER_RIGHT_DOCX.map((def) => (
-                      <DocxFieldItem key={def.key} def={def} />
-                    ))}
-                  </div>
+                  {HEADER_LEFT_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+                </div>
+                <div className={layoutStyles.col}>
+                  <div className={layoutStyles.colHead}>Покупатель · валюта</div>
+                  {HEADER_RIGHT_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+                </div>
               </div>
 
               <div className={layoutStyles.fullBand}>
-                  {HEADER_BAND_DOCX.map((def) => (
-                    <DocxFieldItem key={def.key} def={def} />
-                  ))}
-                  {HEADER_GOVERNMENT_DOCX.map((def) => (
-                    <DocxFieldItem key={def.key} def={def} />
-                  ))}
+                {HEADER_BAND_DOCX.map((def) => (
+                  <DocxFieldItem key={def.key} def={def} />
+                ))}
+                {HEADER_GOVERNMENT_DOCX.map((def) => (
+                  <DocxFieldItem key={def.key} def={def} />
+                ))}
               </div>
 
               <div className={layoutStyles.signatureBand}>
-                  <div className={layoutStyles.colHead}>Подписи и реквизиты ИП (верх бланка)</div>
-                  {HEADER_SIGNATURE_DOCX.map((def) => (
-                    <DocxFieldItem key={def.key} def={def} />
-                  ))}
+                <div className={layoutStyles.colHead}>Подписи и реквизиты ИП (верх бланка)</div>
+                {HEADER_SIGNATURE_DOCX.map((def) => (
+                  <DocxFieldItem key={def.key} def={def} />
+                ))}
               </div>
 
-              <div className={layoutStyles.sectionDivider}>Подвал документа (передача, подписи)</div>
+              <div className={layoutStyles.sectionDivider}>
+                Подвал документа (передача, подписи)
+              </div>
 
               <div className={layoutStyles.footerIntro}>
-                  <div className={layoutStyles.metaHint} style={{ marginBottom: 12 }}>
-                    Блок как на нижней части УПД: слева — продавец (передал), справа — покупатель (получил).
-                  </div>
-                  {FOOTER_FULL_DOCX.map((def) => (
-                    <DocxFieldItem key={def.key} def={def} />
-                  ))}
+                <div className={layoutStyles.metaHint} style={{ marginBottom: 12 }}>
+                  Блок как на нижней части УПД: слева — продавец (передал), справа — покупатель
+                  (получил).
+                </div>
+                {FOOTER_FULL_DOCX.map((def) => (
+                  <DocxFieldItem key={def.key} def={def} />
+                ))}
               </div>
 
               <div className={layoutStyles.footerTwoCols}>
-                  <div className={layoutStyles.footerCol}>
-                    <div className={layoutStyles.footerColTitle}>Передал (продавец)</div>
-                    {FOOTER_LEFT_DOCX.map((def) => (
-                      <DocxFieldItem key={def.key} def={def} />
-                    ))}
-                  </div>
-                  <div className={layoutStyles.footerCol}>
-                    <div className={layoutStyles.footerColTitle}>Получил (покупатель)</div>
-                    {FOOTER_RIGHT_DOCX.map((def) => (
-                      <DocxFieldItem key={def.key} def={def} />
-                    ))}
-                  </div>
+                <div className={layoutStyles.footerCol}>
+                  <div className={layoutStyles.footerColTitle}>Передал (продавец)</div>
+                  {FOOTER_LEFT_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+                </div>
+                <div className={layoutStyles.footerCol}>
+                  <div className={layoutStyles.footerColTitle}>Получил (покупатель)</div>
+                  {FOOTER_RIGHT_DOCX.map((def) => (
+                    <DocxFieldItem key={def.key} def={def} />
+                  ))}
+                </div>
               </div>
             </div>
           </Form>

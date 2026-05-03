@@ -18,10 +18,14 @@
 }
 
 .formBodyScroll {
+  flex: 1 1 auto;
+  min-height: 0;
   max-height: min(580px, calc(100vh - 220px));
+  max-height: min(580px, calc(100dvh - 220px));
   overflow-x: hidden;
   overflow-y: auto;
   padding-right: 6px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sectionDivider {
@@ -110,15 +114,22 @@
 
 .labelRow {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 6px;
   flex-wrap: wrap;
+  max-width: 100%;
 }
 
 .labelText {
   font-size: 12px;
   color: var(--color-text-primary);
   font-weight: 500;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 
 .fullBand {
@@ -162,11 +173,17 @@
 
 .compactItem :global(.ant-form-item-label) {
   padding-bottom: 2px;
+  overflow: visible;
+  white-space: normal;
 }
 
 .compactItem :global(.ant-form-item-label > label) {
-  height: auto;
+  height: auto !important;
+  min-height: 0;
   line-height: 1.35;
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .compactItem :global(.ant-form-item) {
@@ -176,4 +193,109 @@
 .compactItem :global(.ant-input) {
   border-color: var(--panel-border-strong);
   background: var(--color-bg-container);
+}
+
+.modalBodyOuter {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 14px 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalBodyOuter :global(.ant-spin-nested-loading),
+.modalBodyOuter :global(.ant-spin-container) {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalBodyOuter :global(.ant-form) {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.invoiceRowGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.invoiceRowGridTight {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (max-width: 767px) {
+  .modalBodyOuter {
+    padding: 0 10px 12px;
+  }
+
+  .invoiceBand {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .invoiceRowGrid,
+  .invoiceRowGridTight {
+    grid-template-columns: 1fr;
+  }
+
+  .twoCols {
+    grid-template-columns: 1fr;
+  }
+
+  .col {
+    padding: 12px 14px 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .col:last-child {
+    border-bottom: none;
+  }
+
+  .footerTwoCols {
+    grid-template-columns: 1fr;
+  }
+
+  .footerCol {
+    padding: 12px 14px 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .footerCol:last-child {
+    border-bottom: none;
+  }
+
+  .formBodyScroll {
+    max-height: min(65vh, calc(100vh - 200px));
+    max-height: min(65dvh, calc(100dvh - 200px));
+    padding-right: 4px;
+  }
+
+  .sectionDivider {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .colHead,
+  .footerColTitle {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .fullBand,
+  .signatureBand,
+  .footerIntro {
+    padding: 12px 14px;
+  }
 }

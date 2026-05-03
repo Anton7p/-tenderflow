@@ -37,32 +37,17 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
   return (
     <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
       {customTitle}
-      <div
-        style={{
-          padding: '0 10px 10px',
-          minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-        }}
-      >
-        <UploadExcelTable
-          table={table}
-          withSelection={false}
-          showColumnTools={false}
-          draggableColumns={false}
-          horizontalScroll
-        />
-        <div
-          style={{
-            padding: '6px 10px',
-            border: '1px solid var(--panel-border)',
-            backgroundColor: 'var(--color-primary-muted)',
-            color: 'var(--panel-text)',
-            fontSize: 12,
-            borderRadius: 4,
-          }}
-        >
+      <div className={styles.modalBodyCompact}>
+        <div className={styles.modalTableWrap}>
+          <UploadExcelTable
+            table={table}
+            withSelection={false}
+            showColumnTools={false}
+            draggableColumns={false}
+            horizontalScroll
+          />
+        </div>
+        <div className={styles.modalHint}>
           Введите данные для итоговой позиции. Одинаковые значения в выбранных строках подставляются
           автоматически, отличающиеся поля остаются пустыми. Денежные поля рассчитываются как сумма
           по выбранным строкам. После нажатия «Применить к группе» выбранные строки будут заменены

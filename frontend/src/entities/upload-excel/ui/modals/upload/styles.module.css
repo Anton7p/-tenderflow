@@ -26,7 +26,45 @@
 
 .modalActions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  flex-shrink: 0;
+}
+
+.modalBodyCompact {
+  flex: 1 1 auto;
+  padding: 0 10px 10px;
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modalTableWrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHint {
+  padding: 6px 10px;
+  border: 1px solid var(--panel-border);
+  background-color: var(--color-primary-muted);
+  color: var(--panel-text);
+  font-size: 12px;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.modalBodyScrollable {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 10px 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .primaryButton {
@@ -42,7 +80,11 @@
 }
 
 .uploadContent {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 8px 14px 14px;
+  display: flex;
+  flex-direction: column;
 }
 
 .fileInput {
@@ -150,4 +192,64 @@
   border-color: var(--panel-dropzone-hover-border);
   background: var(--panel-dropzone-hover-bg);
   color: var(--panel-text);
+}
+
+@media (max-width: 767px) {
+  .modalHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .modalTitle {
+    font-size: 13px;
+    text-align: left;
+  }
+
+  .modalActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .modalActions :global(.ant-btn) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .modalBodyCompact {
+    padding: 0 8px 10px;
+  }
+
+  .modalHint {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .modalBodyScrollable {
+    padding: 0 8px 10px;
+  }
+
+  .uploadContent {
+    padding: 8px 10px 12px;
+  }
+
+  .dropZone {
+    min-height: 200px;
+    padding: 12px;
+  }
+
+  .uploadIcon {
+    font-size: 36px;
+  }
+
+  .uploadTitle {
+    font-size: 15px;
+  }
+
+  .selectedPanel {
+    min-height: 160px;
+    padding: 12px;
+  }
 }

@@ -26,7 +26,9 @@ export function PositionModal(props: PositionModalProps) {
 
   const customTitle = (
     <div className={styles.modalHeader}>
-      <span className={styles.modalTitle}>{isEdit ? 'Редактирование позиции' : 'Создание позиции'}</span>
+      <span className={styles.modalTitle}>
+        {isEdit ? 'Редактирование позиции' : 'Создание позиции'}
+      </span>
       <div className={styles.modalActions}>
         <Button type="primary" className={styles.primaryButton} htmlType="submit" form={formId}>
           {isEdit ? 'Сохранить' : 'Добавить'}
@@ -42,7 +44,7 @@ export function PositionModal(props: PositionModalProps) {
     <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
       {customTitle}
       {isOpen ? (
-        <div style={{ padding: '0 10px 10px' }}>
+        <div className={styles.modalBodyScrollable}>
           <UploadExcelRowForm
             key={`${mode}-${params?.row ? `${params.row.id}-${params.row.index}` : 'new'}`}
             formId={formId}
