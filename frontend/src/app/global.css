@@ -1,29 +1,94 @@
 :root {
-  /* Цвета Modern 1C */
-  --color-primary: #FFD045;
-  --color-bg-layout: #F8FAFC;
-  --color-bg-container: #FFFFFF;
-  --color-border: #D9D9D9;
-  --color-border-secondary: #E5E7EB;
-  --color-text-primary: #1F2937;
-  --color-text-secondary: #6B7280;
+  /* === Гос-контора: синий акцент и оттенки (вся палитра здесь) === */
+  --color-primary: #0d5299;
+  --color-primary-hover: #0a4380;
+  --color-primary-active: #083566;
+  --color-primary-muted: #e8f0fb;
+  --color-primary-soft: rgba(13, 82, 153, 0.12);
+  --color-primary-soft-strong: rgba(13, 82, 153, 0.22);
 
-  /* Цвета для интерфейса */
-  --header-bg: #FFE066;
-  --sidebar-bg: #FFFFFF;
-  --command-bar-bg: #F2F2F2;
-  --table-header-bg: #F2F2F2;
-  --table-hover-bg: #FFD045;
+  --color-bg-layout: #eef3fa;
+  --color-bg-container: #ffffff;
+  --color-border: #b8c9df;
+  --color-border-secondary: #d2deef;
+  --color-text-primary: #152d4a;
+  --color-text-secondary: #4a6688;
+  --color-text-on-primary: #ffffff;
 
-  /* Размеры */
+  --header-bg: #0a3d73;
+  --header-text: #ffffff;
+  --header-border: #073057;
+  --header-avatar-bg: #ffffff;
+  --header-avatar-border: rgba(255, 255, 255, 0.4);
+
+  --sidebar-bg: #ffffff;
+  --command-bar-bg: #e4ecf7;
+  --table-header-bg: #dce8f5;
+  --table-hover-bg: var(--color-primary-soft);
+
+  --color-focus-ring: var(--color-primary);
+
+  --scrollbar-thumb: #9eb4d0;
+  --scrollbar-thumb-hover: #7d96b8;
+
+  --notification-border: #8fb4dc;
+  --notification-bg: #f4f8fd;
+  --notification-shadow: rgba(10, 45, 74, 0.12);
+  --notification-message-bg: #ddeaf8;
+  --notification-message-text: #0a3d73;
+  --notification-desc-text: #3d5a78;
+
+  --main-page-padding: 24px;
+  --main-page-max-width: 960px;
+  /** Совпадает с ограничением вкладок (Выгрузка УПД и т.д.) — выравнивание блоков главной */
+  --layout-max-width: 1440px;
+  --main-hero-accent: var(--color-primary);
+  --main-card-bg: var(--color-bg-container);
+  --main-card-border: var(--color-border);
+  --main-card-shadow: rgba(13, 45, 74, 0.08);
+  --main-muted-bg: #e8eff8;
+  --main-grid-line: rgba(13, 82, 153, 0.07);
+  --main-tile-hover-bg: var(--color-primary-soft);
+  --main-tile-active-bg: var(--color-primary-soft-strong);
+  --main-dark-band-bg: #06294d;
+  --main-dark-band-text: #f0f6fc;
+  --main-dark-band-muted: #a8c4e0;
+  --main-divider: var(--color-border-secondary);
+
+  --tabs-hover-bg: var(--color-primary-soft);
+  --tabs-active-bg: rgba(13, 82, 153, 0.18);
+
+  /* Панели, таблицы, модалки, дропзоны */
+  --panel-border: #c5d4e8;
+  --panel-border-strong: #a8bdd9;
+  --panel-header-bg-top: #f3f7fc;
+  --panel-header-bg-bottom: #e8f0fa;
+  --panel-header-border: #b8c9df;
+  --panel-surface: #f5f9fd;
+  --panel-surface-muted: #eef4fb;
+  --panel-row-alt: #eaf1fa;
+  --panel-text: #1e3a5f;
+  --panel-text-muted: #5a7394;
+  --panel-dropzone-border: #b8cddf;
+  --panel-dropzone-hover-bg: var(--color-primary-muted);
+  --panel-dropzone-hover-border: var(--color-primary);
+  --panel-link: #0b5cad;
+  --panel-accent-row-bg: #dceaf9;
+  --panel-accent-row-hover: #c9dff5;
+  --panel-accent-row-active: #b3d0ef;
+
+  --modal-border: var(--panel-border-strong);
+  --modal-header-bg: var(--command-bar-bg);
+  --modal-mask: rgba(6, 28, 48, 0.52);
+
+  --form-focus-border: var(--color-primary);
+  --form-focus-shadow: rgba(13, 82, 153, 0.28);
+
+  --border-radius: 3px;
   --header-height: 48px;
   --sidebar-width: 220px;
-  --border-radius: 3px;
-
-  /* Отступы */
   --spacing-lg: 20px;
 
-  /* Шрифты */
   --font-family: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-size-base: 13px;
 }
@@ -42,21 +107,44 @@ body {
   background: var(--color-bg-layout);
 }
 
-/* У кнопок */
 button,
 .ant-btn {
   box-shadow: none !important;
 }
 
 .ant-btn {
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
-.ant-btn:hover {
+.ant-btn-default:hover:not(:disabled),
+.ant-btn-dashed:hover:not(:disabled) {
   filter: brightness(0.98);
 }
 
-/* Скругление для кнопок и инпутов */
+.ant-btn-primary,
+.ant-btn-variant-solid.ant-btn-color-primary {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-text-on-primary) !important;
+}
+
+.ant-btn-primary:not(:disabled):hover,
+.ant-btn-variant-solid.ant-btn-color-primary:not(:disabled):hover {
+  background: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  color: var(--color-text-on-primary) !important;
+}
+
+.ant-btn-primary:not(:disabled):active,
+.ant-btn-variant-solid.ant-btn-color-primary:not(:disabled):active {
+  background: var(--color-primary-active) !important;
+  border-color: var(--color-primary-active) !important;
+  color: var(--color-text-on-primary) !important;
+}
+
 button,
 input,
 select,
@@ -71,14 +159,10 @@ button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 .ant-btn:focus-visible {
-  outline: 2px solid #ffd045 !important;
+  outline: 2px solid var(--color-focus-ring) !important;
   outline-offset: 1px;
 }
 
-/*
- * Ant Design сам рисует фокус у Input / Select (border + box-shadow).
- * Не дублируем outline из focus-visible — иначе видна «вторая» жёлтая рамка.
- */
 .ant-input:not(.ant-input-disabled):focus,
 .ant-input:not(.ant-input-disabled):focus-visible,
 .ant-input-affix-wrapper:focus,
@@ -90,7 +174,6 @@ textarea:focus-visible,
   outline: none !important;
 }
 
-/* InputNumber: внутри обычный <input class="ant-input-number-input"> — без второго outline */
 .ant-input-number-input:focus,
 .ant-input-number-input:focus-visible {
   outline: none !important;
@@ -101,13 +184,11 @@ textarea:focus-visible,
   outline: none !important;
 }
 
-/* Активная строка в таблице */
 .ant-table-tbody > tr.ant-table-row-selected > td,
 .ant-table-tbody > tr:hover > td {
   background-color: var(--table-hover-bg) !important;
 }
 
-/* Шапка таблицы */
 .ant-table-thead > tr > th {
   background-color: var(--table-header-bg) !important;
   border-color: var(--color-border) !important;
@@ -123,20 +204,19 @@ textarea:focus-visible,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C0C0C0;
-  /* Можно добавить небольшое скругление, чтобы такая тонкая линия не выглядела "рваной" */
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8A8A8;
+  background: var(--scrollbar-thumb-hover);
 }
 
 .app-notification.ant-notification-notice {
-  border: 1px solid #f2df9b !important;
+  border: 1px solid var(--notification-border) !important;
   border-radius: 6px !important;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
-  background: #fffdf5 !important;
+  box-shadow: 0 8px 20px var(--notification-shadow) !important;
+  background: var(--notification-bg) !important;
   min-height: 96px;
   padding: 14px 14px !important;
 }
@@ -144,15 +224,14 @@ textarea:focus-visible,
 .app-notification.ant-notification-notice .ant-notification-notice-message {
   margin: -2px -4px 8px -4px !important;
   padding: 9px 12px !important;
-  background: #fff1bf !important;
-  border: 1px solid #f2df9b !important;
+  background: var(--notification-message-bg) !important;
+  border: 1px solid var(--notification-border) !important;
   border-radius: 4px !important;
-  color: #6b4e00 !important;
+  color: var(--notification-message-text) !important;
   font-weight: 600 !important;
 }
 
 .app-notification.ant-notification-notice .ant-notification-notice-description {
-  color: #5b5b4f !important;
+  color: var(--notification-desc-text) !important;
   font-size: 13px !important;
 }
-

@@ -1,5 +1,5 @@
 /**
- * Панели как у формы редактирования позиции (`upload-excel-row-form`): серый фон и рамка.
+ * Панели формы экспорта — те же токены, что global.css (--panel-*).
  */
 .sheet,
 .formBodyScroll > .twoCols,
@@ -7,8 +7,8 @@
 .formBodyScroll > .signatureBand,
 .formBodyScroll > .footerIntro,
 .formBodyScroll > .footerTwoCols {
-  border: 1px solid #dbe2ea;
-  background: #f9fbfd;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-surface);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -17,7 +17,6 @@
   margin-top: 8px;
 }
 
-/** Прокрутка всего тела формы (от блока «листа» до подвала). */
 .formBodyScroll {
   max-height: min(580px, calc(100vh - 220px));
   overflow-x: hidden;
@@ -27,16 +26,19 @@
 
 .sectionDivider {
   padding: 12px 16px;
-  background: linear-gradient(180deg, #eef2f6 0%, #e4e9ef 100%);
-  border: 1px solid #dbe2ea;
-  border-bottom: 1px solid #cfd7e1;
+  background: linear-gradient(
+    180deg,
+    var(--panel-header-bg-top) 0%,
+    var(--panel-header-bg-bottom) 100%
+  );
+  border: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--panel-border-strong);
   font-weight: 700;
   font-size: 13px;
-  color: #2d3a47;
+  color: var(--panel-text);
   border-radius: 6px;
 }
 
-/** Первая полоса внутри `.sheet`: без двойной верхней границы с рамкой панели. */
 .sectionDividerLead {
   border-top: none;
   border-radius: 0;
@@ -48,7 +50,7 @@
   gap: 16px;
   padding: 14px 16px;
   background: transparent;
-  border-bottom: 1px solid #dbe2ea;
+  border-bottom: 1px solid var(--panel-border);
 }
 
 .invoicePair {
@@ -68,7 +70,7 @@
 .metaHint {
   grid-column: 1 / -1;
   font-size: 11px;
-  color: #7a8a99;
+  color: var(--panel-text-muted);
   margin-top: 4px;
 }
 
@@ -80,7 +82,7 @@
 
 .col {
   padding: 14px 16px 18px;
-  border-right: 1px solid #dbe2ea;
+  border-right: 1px solid var(--panel-border);
   min-width: 0;
 }
 
@@ -91,10 +93,10 @@
 .colHead {
   font-weight: 700;
   font-size: 12px;
-  color: #2d3a47;
+  color: var(--panel-text);
   margin-bottom: 14px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #e8ecf1;
+  border-bottom: 2px solid var(--color-border-secondary);
 }
 
 .marker {
@@ -102,7 +104,7 @@
   min-width: 2.25rem;
   font-size: 11px;
   font-weight: 600;
-  color: #6b7c8c;
+  color: var(--panel-text-muted);
   vertical-align: baseline;
 }
 
@@ -115,7 +117,7 @@
 
 .labelText {
   font-size: 12px;
-  color: #374551;
+  color: var(--color-text-primary);
   font-weight: 500;
 }
 
@@ -139,7 +141,7 @@
 
 .footerCol {
   padding: 14px 16px 18px;
-  border-right: 1px solid #dbe2ea;
+  border-right: 1px solid var(--panel-border);
   min-width: 0;
 }
 
@@ -150,7 +152,7 @@
 .footerColTitle {
   font-weight: 700;
   font-size: 12px;
-  color: #2d3a47;
+  color: var(--panel-text);
   margin-bottom: 14px;
 }
 
@@ -172,6 +174,6 @@
 }
 
 .compactItem :global(.ant-input) {
-  border-color: #cfd7e1;
-  background: #ffffff;
+  border-color: var(--panel-border-strong);
+  background: var(--color-bg-container);
 }

@@ -4,7 +4,13 @@ import type { UploadExcelTableProps } from '../../types';
 import { UploadExcelTableToolbar } from './upload-excel-table-toolbar';
 
 export function UploadExcelTable(props: UploadExcelTableProps) {
-  const { table, withSelection = true, showColumnTools = true, draggableColumns = true } = props;
+  const {
+    table,
+    withSelection = true,
+    showColumnTools = true,
+    draggableColumns = true,
+    horizontalScroll = false,
+  } = props;
 
   return (
     <>
@@ -13,6 +19,7 @@ export function UploadExcelTable(props: UploadExcelTableProps) {
         table={table}
         withSelection={withSelection}
         draggableColumns={draggableColumns}
+        horizontalScroll={horizontalScroll}
       />
     </>
   );

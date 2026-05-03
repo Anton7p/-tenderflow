@@ -9,7 +9,7 @@ export const Workspace = ({ children, transparent = false }: WorkspaceProps) => 
   return (
     <Card
       variant="borderless"
-      styles={{ body: { padding: transparent ? 0 : '16px' } }}
+      styles={{ body: { padding: transparent ? 0 : '16px', minWidth: 0, minHeight: 0 } }}
       style={{
         height: '100%',
         backgroundColor: transparent ? 'transparent' : 'var(--color-bg-container)',

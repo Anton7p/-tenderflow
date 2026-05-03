@@ -1,8 +1,10 @@
-import { AppstoreOutlined, BankOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Row, Space, Typography } from 'antd';
+import { BankOutlined, FileTextOutlined, RightOutlined } from '@ant-design/icons';
 import styles from './main.module.css';
 
-const { Title, Paragraph, Text } = Typography;
+const HERO_TITLE = 'Подготовка документов для тендеров и закупок';
+
+const HERO_LEAD =
+  'Инструмент для ручной настройки и выгрузки форм: загрузите Excel, отредактируйте позиции и сохраните готовые DOCX по вашим шаблонам.';
 
 interface MainPageProps {
   onOpenSection: (tabId: string) => void;
@@ -12,62 +14,43 @@ const sections = [
   {
     id: 'upd-downloads',
     title: 'Выгрузка УПД',
-    description: 'Загрузка Excel, редактирование строк и экспорт в DOCX.',
+    description: 'Реестр из Excel, правка позиций и сохранение DOCX под ваш шаблон.',
     icon: <FileTextOutlined />,
   },
   {
     id: 'payment-account',
     title: 'Расчётный счёт',
-    description: 'Раздел для работы с данными расчётного счёта.',
+    description: 'В разработке: формы и сценарии появятся позже.',
     icon: <BankOutlined />,
   },
 ] as const;
 
 export function MainPage({ onOpenSection }: MainPageProps) {
+  const open = (id: string) => () => onOpenSection(id);
+
   return (
-    <div className={styles.mainPage}>
-      <Space direction="vertical" size={18} style={{ width: '100%' }}>
-        <div>
-          <Title level={3} style={{ marginBottom: 4 }}>
-            Главная
-          </Title>
-          <Paragraph style={{ marginBottom: 0 }}>
-            Выберите раздел, чтобы продолжить работу.
-          </Paragraph>
+    <div className={styles.pageRoot}>
+      <header className={styles.darkBandTop}>
+        <div className={styles.darkBandConstrain}>
+          <h1 className={styles.darkBandTitle}>{HERO_TITLE}</h1>
+          <p className={styles.darkBandMuted}>{HERO_LEAD}</p>
         </div>
+      </header>
 
-        <Card className={styles.heroCard}>
-          <Space align="center" size={10}>
-            <AppstoreOutlined />
-            <Text strong>О приложении</Text>
-          </Space>
-          <Paragraph style={{ marginTop: 10, marginBottom: 0 }}>
-            Сервис помогает подготовить документы по УПД: загружает Excel, позволяет проверить и
-            сгруппировать позиции, а затем формирует DOCX-шаблон для выгрузки.
-          </Paragraph>
-        </Card>
-
-        <Row gutter={[16, 16]}>
-          {sections.map((section) => (
-            <Col xs={24} md={12} lg={8} key={section.id}>
-              <Card
-                className={styles.sectionCard}
-                title={
-                  <Space>
-                    {section.icon}
-                    <span>{section.title}</span>
-                  </Space>
-                }
-              >
-                <Paragraph>{section.description}</Paragraph>
-                <Button type="primary" onClick={() => onOpenSection(section.id)}>
-                  Открыть
-                </Button>
-              </Card>
-            </Col>
+      <div className={`${styles.contentArea} ${styles.modeCommand}`}>
+        <div className={styles.contentInner}>
+          {sections.map((s) => (
+            <button key={s.id} type="button" className={styles.tileRow} onClick={open(s.id)}>
+              <span className={styles.tileIcon}>{s.icon}</span>
+              <span className={styles.tileBody}>
+                <div className={styles.tileTitle}>{s.title}</div>
+                <p className={styles.tileDesc}>{s.description}</p>
+              </span>
+              <RightOutlined className={styles.tileArrow} aria-hidden />
+            </button>
           ))}
-        </Row>
-      </Space>
+        </div>
+      </div>
     </div>
   );
 }

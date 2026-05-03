@@ -3,12 +3,13 @@ import { ActionsEnum, ModalsEnum } from '../../config';
 import { ModalActionsEnum, notify } from '@shared/lib';
 import { useActionsHandler } from '@shared/ui/components/page-actions';
 import { usePageActionsVisibility } from './use-page-actions-visibility';
-import {
-  generateWordDocx,
-  uploadExcelFile,
-} from '@entities/upload-excel/api';
-import type { DocxTemplateFieldsModel, FooterFieldsModel } from '@entities/upload-excel/api/upload-excel-api';
+import { generateWordDocx, uploadExcelFile } from '@entities/upload-excel/api';
+import type {
+  DocxTemplateFieldsModel,
+  FooterFieldsModel,
+} from '@entities/upload-excel/api/upload-excel-api';
 import type { PageActions, UsePageActionsProps } from '../../types';
+import { roundMoney } from '@entities/upload-excel/lib';
 import type { UploadExcelRowModel } from '@entities/upload-excel/types/public';
 import type { PageBaseAction } from '@shared/ui/components/page-actions/types';
 
@@ -120,9 +121,8 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
           onApply: (values?: UploadExcelRowModel) => {
             if (!values) return;
             const maxIndex = store.tableData.reduce(
-              (max: number, row: UploadExcelRowModel) =>
-                Math.max(max, Number(row.index) || 0),
-              0
+              (max: number, row: UploadExcelRowModel) => Math.max(max, Number(row.index) || 0),
+              0,
             );
             const normalizedValues = normalizeNumericFields(values);
             const newRow = {
@@ -146,7 +146,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
 
         const selectedId = selectedIds[0];
         const selectedRow = store.tableData.find(
-          (row: UploadExcelRowModel) => String(row.id ?? row.index) === selectedId
+          (row: UploadExcelRowModel) => String(row.id ?? row.index) === selectedId,
         );
         if (!selectedRow) {
           return;
@@ -161,8 +161,8 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
               store.tableData.map((row: UploadExcelRowModel) =>
                 String(row.id ?? row.index) === selectedId
                   ? { ...row, ...values, id: row.id }
-                  : row
-              )
+                  : row,
+              ),
             );
             store.closeModal();
             notify.success({ message: 'Позиция обновлена' });
@@ -193,16 +193,23 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
               store.setLoading(true);
               const { blob, fileName } = await generateWordDocx({
                 tableData: store.tableData,
-                counterparties: values?.counterparties ?? store.counterparties ?? EMPTY_COUNTERPARTIES,
+                counterparties:
+                  values?.counterparties ?? store.counterparties ?? EMPTY_COUNTERPARTIES,
                 headerFields: values?.headerFields ?? store.headerFields ?? EMPTY_HEADER_FIELDS,
                 footerFields: values?.footerFields ?? store.footerFields ?? EMPTY_FOOTER_FIELDS,
                 docxFields: values?.docxFields ?? store.docxFields ?? {},
                 rawRowsCount: store.rawRowsCount || store.tableData.length,
                 sourceFileName: store.sourceFileName || '',
               });
-              store.setCounterparties(values?.counterparties ?? store.counterparties ?? EMPTY_COUNTERPARTIES);
-              store.setHeaderFields(values?.headerFields ?? store.headerFields ?? EMPTY_HEADER_FIELDS);
-              store.setFooterFields(values?.footerFields ?? store.footerFields ?? EMPTY_FOOTER_FIELDS);
+              store.setCounterparties(
+                values?.counterparties ?? store.counterparties ?? EMPTY_COUNTERPARTIES,
+              );
+              store.setHeaderFields(
+                values?.headerFields ?? store.headerFields ?? EMPTY_HEADER_FIELDS,
+              );
+              store.setFooterFields(
+                values?.footerFields ?? store.footerFields ?? EMPTY_FOOTER_FIELDS,
+              );
               store.setDocxFields(values?.docxFields ?? store.docxFields ?? {});
               const url = URL.createObjectURL(blob);
               const link = document.createElement('a');
@@ -227,7 +234,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
           return;
         }
         const selectedRows = store.tableData.filter((row: UploadExcelRowModel) =>
-          selectedIds.includes(String(row.id ?? row.index))
+          selectedIds.includes(String(row.id ?? row.index)),
         );
         store.openModal({
           name: ModalsEnum.GROUP_POSITIONS,
@@ -239,7 +246,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
 
             const selectedSet = new Set(selectedIds.map(String));
             const firstSelectedIndex = store.tableData.findIndex((row: UploadExcelRowModel) =>
-              selectedSet.has(String(row.id ?? row.index))
+              selectedSet.has(String(row.id ?? row.index)),
             );
 
             const groupedRow: UploadExcelRowModel = {
@@ -248,7 +255,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
             };
 
             const remainingRows = store.tableData.filter(
-              (row: UploadExcelRowModel) => !selectedSet.has(String(row.id ?? row.index))
+              (row: UploadExcelRowModel) => !selectedSet.has(String(row.id ?? row.index)),
             );
             const insertAt = firstSelectedIndex >= 0 ? firstSelectedIndex : remainingRows.length;
             const nextRows = [...remainingRows];
@@ -281,7 +288,7 @@ export function usePageActions(props: UsePageActionsProps): PageActions {
         console.log('Clear action');
       },
     }),
-    [store, state]
+    [store, state],
   );
 
   const onAction = useActionsHandler(handlers);
@@ -294,9 +301,9 @@ function normalizeNumericFields(row: UploadExcelRowModel): UploadExcelRowModel {
     ...row,
     index: Number(row.index) || 0,
     quantity: Number(row.quantity) || 0,
-    price: Number(row.price) || 0,
-    totalBeforeTax: Number(row.totalBeforeTax) || 0,
-    taxAmount: Number(row.taxAmount) || 0,
-    totalWithTax: Number(row.totalWithTax) || 0,
+    price: roundMoney(Number(row.price) || 0),
+    totalBeforeTax: roundMoney(Number(row.totalBeforeTax) || 0),
+    taxAmount: roundMoney(Number(row.taxAmount) || 0),
+    totalWithTax: roundMoney(Number(row.totalWithTax) || 0),
   };
 }

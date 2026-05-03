@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Modal as SharedModal } from '@shared/ui';
 import { UploadExcelRowForm, UploadExcelTable } from '@entities/upload-excel/ui';
-import { useUploadExcelReadonlyTable } from '@entities/upload-excel/lib';
+import { roundMoney, useUploadExcelReadonlyTable } from '@entities/upload-excel/lib';
 import { Button } from 'antd';
 import type { UploadExcelRowModel } from '@entities/upload-excel/types/public';
 import styles from '../upload/styles.module.css';
@@ -22,9 +22,7 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
 
   const customTitle = (
     <div className={styles.modalHeader}>
-      <span className={styles.modalTitle}>
-        Сгруппированные позиции ({rows.length})
-      </span>
+      <span className={styles.modalTitle}>Сгруппированные позиции ({rows.length})</span>
       <div className={styles.modalActions}>
         <Button type="primary" className={styles.primaryButton} htmlType="submit" form={formId}>
           Применить к группе
@@ -39,27 +37,36 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
   return (
     <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
       {customTitle}
-      <div style={{ padding: '0 10px 10px', minHeight: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div
+        style={{
+          padding: '0 10px 10px',
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+        }}
+      >
         <UploadExcelTable
           table={table}
           withSelection={false}
           showColumnTools={false}
           draggableColumns={false}
+          horizontalScroll
         />
         <div
           style={{
             padding: '6px 10px',
-            border: '1px solid #e5e7eb',
-            backgroundColor: '#fef9c3',
-            color: '#374151',
+            border: '1px solid var(--panel-border)',
+            backgroundColor: 'var(--color-primary-muted)',
+            color: 'var(--panel-text)',
             fontSize: 12,
             borderRadius: 4,
           }}
         >
-          Введите данные для итоговой позиции. Одинаковые значения в выбранных строках
-          подставляются автоматически, отличающиеся поля остаются пустыми. Денежные поля
-          рассчитываются как сумма по выбранным строкам. После нажатия «Применить к группе»
-          выбранные строки будут заменены одной итоговой позицией.
+          Введите данные для итоговой позиции. Одинаковые значения в выбранных строках подставляются
+          автоматически, отличающиеся поля остаются пустыми. Денежные поля рассчитываются как сумма
+          по выбранным строкам. После нажатия «Применить к группе» выбранные строки будут заменены
+          одной итоговой позицией.
         </div>
         <UploadExcelRowForm
           formId={formId}
@@ -75,7 +82,8 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
 
 type UploadExcelRowFormValues = Omit<UploadExcelRowModel, 'id'>;
 
-const MONEY_FIELDS: Array<keyof UploadExcelRowFormValues> = [
+/** Денежные поля: сумма по строкам, округление до 2 знаков после запятой */
+const MONEY_SUM_FIELDS: Array<keyof UploadExcelRowFormValues> = [
   'price',
   'totalBeforeTax',
   'taxAmount',
@@ -98,14 +106,16 @@ function buildInitialFormValues(rows: UploadExcelRowModel[]): Partial<UploadExce
   const firstRow = rows[0];
   const result: Partial<UploadExcelRowFormValues> = {};
 
-  const keys = Object.keys(firstRow).filter((key) => key !== 'id') as Array<keyof UploadExcelRowFormValues>;
+  const keys = Object.keys(firstRow).filter((key) => key !== 'id') as Array<
+    keyof UploadExcelRowFormValues
+  >;
   for (const key of keys) {
-    if (MONEY_FIELDS.includes(key)) {
+    if (MONEY_SUM_FIELDS.includes(key)) {
       const sum = rows.reduce(
         (acc, row) => acc + (Number(row[key as keyof UploadExcelRowModel]) || 0),
         0,
       );
-      setFormField(result, key, sum as UploadExcelRowFormValues[typeof key]);
+      setFormField(result, key, roundMoney(sum) as UploadExcelRowFormValues[typeof key]);
       continue;
     }
 

@@ -26,13 +26,13 @@
 
 .tab:hover {
   color: var(--color-text-primary);
-  background-color: rgba(255, 208, 69, 0.1);
+  background-color: var(--tabs-hover-bg);
 }
 
 .tabActive {
   color: var(--color-text-primary);
   border-bottom-color: var(--color-primary);
-  background-color: rgba(255, 208, 69, 0.15);
+  background-color: var(--tabs-active-bg);
 }
 
 .tabIcon {

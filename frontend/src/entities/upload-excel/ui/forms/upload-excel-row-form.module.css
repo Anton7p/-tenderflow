@@ -1,9 +1,9 @@
 .form {
   margin-bottom: 2px;
   padding: 8px 10px;
-  border: 1px solid #dbe2ea;
+  border: 1px solid var(--panel-border);
   border-radius: 6px;
-  background: #f9fbfd;
+  background: var(--panel-surface);
 }
 
 .grid {
@@ -23,7 +23,7 @@
 .item :global(.ant-form-item-label > label) {
   font-size: 11px;
   line-height: 1.1;
-  color: #334155;
+  color: var(--panel-text);
   font-weight: 500;
 }
 
@@ -32,8 +32,8 @@
   height: 26px;
   padding-top: 1px;
   padding-bottom: 1px;
-  border-color: #cfd7e1;
-  background: #ffffff;
+  border-color: var(--panel-border-strong);
+  background: var(--color-bg-container);
 }
 
 .field {

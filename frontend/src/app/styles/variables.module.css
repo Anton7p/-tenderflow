@@ -1,41 +1,36 @@
+/* Дублирует токены из global.css :root для модулей CSS */
 :root {
-  /* Основные цвета Modern 1C */
-  --color-primary: #FFD045;
-  --color-bg-layout: #F8FAFC;
-  --color-bg-container: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-border: #D9D9D9;
-  --color-border-secondary: #E5E7EB;
-  --color-text-primary: #1F2937;
-  --color-text-secondary: #6B7280;
-  
-  /* Цвета для интерфейса */
-  --header-bg: #FFD045;
-  --sidebar-bg: #FFFFFF;
-  --command-bar-bg: #F2F2F2;
-  --table-header-bg: #F2F2F2;
-  --table-hover-bg: #FFD045;
-  
-  /* Размеры */
-  --header-height: 48px;
-  --sidebar-width: 220px;
+  --color-primary: #0d5299;
+  --color-bg-layout: #eef3fa;
+  --color-bg-container: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-border: #b8c9df;
+  --color-border-secondary: #d2deef;
+  --color-text-primary: #152d4a;
+  --color-text-secondary: #4a6688;
+
+  --header-bg: #0a3d73;
+  --sidebar-bg: #ffffff;
+  --command-bar-bg: #e4ecf7;
+  --table-header-bg: #dce8f5;
+  --table-hover-bg: rgba(13, 82, 153, 0.12);
+
   --border-radius: 6px;
   --border-radius-sm: 4px;
-  
-  /* Отступы */
+  --header-height: 48px;
+  --sidebar-width: 220px;
+
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
   --spacing-lg: 16px;
   --spacing-xl: 20px;
   --spacing-2xl: 24px;
-  
-  /* Тени */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  
-  /* Шрифты */
+
+  --shadow-sm: 0 1px 2px 0 rgba(10, 45, 74, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(10, 45, 74, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(10, 45, 74, 0.12);
+
   --font-family: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-size-base: 13px;
   --font-size-sm: 12px;

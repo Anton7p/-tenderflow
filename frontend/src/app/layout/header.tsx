@@ -1,5 +1,5 @@
 import { Flex, Typography } from 'antd';
-import { FileTextOutlined, UserOutlined } from '@ant-design/icons';
+import { ProjectOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -10,29 +10,31 @@ interface HeaderProps {
 
 export const Header = ({ title, userName = 'Администратор' }: HeaderProps) => {
   return (
-    <Flex 
-      align="center" 
+    <Flex
+      align="center"
       justify="center"
-      style={{ 
-        height: '48px', 
-        backgroundColor: 'var(--header-bg)', 
-        borderBottom: '1px solid var(--color-border)',
+      style={{
+        height: '48px',
+        backgroundColor: 'var(--header-bg)',
+        borderBottom: '1px solid var(--header-border)',
       }}
     >
-      <Flex 
-        align="center" 
+      <Flex
+        align="center"
         justify="space-between"
-        style={{ 
+        style={{
           width: '100%',
           maxWidth: '1440px',
-          padding: '0 20px'
+          padding: '0 20px',
         }}
       >
         <Flex align="center" gap={12}>
-          <FileTextOutlined style={{ fontSize: '18px', color: 'var(--color-text-primary)' }} />
-          <Text strong style={{ fontSize: '14px', color: 'var(--color-text-primary)' }}>{title}</Text>
+          <ProjectOutlined style={{ fontSize: '18px', color: 'var(--header-text)' }} />
+          <Text strong style={{ fontSize: '14px', color: 'var(--header-text)' }}>
+            {title}
+          </Text>
         </Flex>
-        
+
         <Flex align="center" gap={16}>
           <Flex align="center" gap={8}>
             <div
@@ -40,16 +42,16 @@ export const Header = ({ title, userName = 'Администратор' }: Heade
                 width: 32,
                 height: 32,
                 borderRadius: '50%',
-                backgroundColor: 'var(--color-bg-container)',
+                backgroundColor: 'var(--header-avatar-bg)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                border: '1px solid var(--color-border)',
+                border: '1px solid var(--header-avatar-border)',
               }}
             >
-              <UserOutlined />
+              <UserOutlined style={{ color: 'var(--color-primary)' }} />
             </div>
-            <Text style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}>{userName}</Text>
+            <Text style={{ fontSize: '13px', color: 'var(--header-text)' }}>{userName}</Text>
           </Flex>
         </Flex>
       </Flex>

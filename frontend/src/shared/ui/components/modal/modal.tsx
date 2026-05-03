@@ -42,15 +42,13 @@ export function Modal({
       className={styles.modal}
       style={{ top: 0 }}
       styles={{
-        mask: { backgroundColor: 'rgba(0, 0, 0, 0.45)' },
+        mask: { backgroundColor: 'var(--modal-mask)' },
         body: {
           padding: 0,
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          ...(fixedShell
-            ? { flex: '1 1 auto', minHeight: 0 }
-            : { minHeight: height }),
+          ...(fixedShell ? { flex: '1 1 auto', minHeight: 0 } : { minHeight: height }),
           ...contentStyle,
         },
       }}

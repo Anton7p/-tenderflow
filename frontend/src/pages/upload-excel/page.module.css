@@ -10,9 +10,9 @@
 .dropzone {
   width: 100%;
   padding: 34px 0;
-  border: 1px dashed #d3dbe5;
+  border: 1px dashed var(--panel-dropzone-border);
   border-radius: 8px;
-  background: #f9fbfd;
+  background: var(--panel-surface);
 }
 
 .uploader {

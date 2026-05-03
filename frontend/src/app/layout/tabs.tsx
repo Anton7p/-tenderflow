@@ -19,10 +19,11 @@ export const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => onTabChange(tab.id)}
             className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
           >
-            {tab.icon && <span className={styles.tabIcon}>{tab.icon}</span>}
+            {tab.icon ? <span className={styles.tabIcon}>{tab.icon}</span> : null}
             <span className={styles.tabLabel}>{tab.label}</span>
           </button>
         ))}

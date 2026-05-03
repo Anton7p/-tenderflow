@@ -8,6 +8,8 @@ export interface UploadExcelTableProps {
   showColumnTools?: boolean;
   /** Перетаскивание заголовков колонок (на главной странице обычно true даже без встроенного тулбара) */
   draggableColumns?: boolean;
+  /** Горизонтальный скролл при узком контейнере (модалки); на странице отключён против ложного скролла от вертикального */
+  horizontalScroll?: boolean;
 }
 
 export interface UploadExcelTableConfig {

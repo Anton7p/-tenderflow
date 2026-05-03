@@ -39,12 +39,24 @@ function App() {
           overflow: 'hidden',
         }}
       >
-        <div style={{ width: '100%', maxWidth: '1440px', margin: '0 auto', height: '100%' }}>
-          {!isMainTab ? (
+        {isMainTab ? (
+          <div style={{ width: '100%', height: '100%', minWidth: 0 }}>
+            <Workspace transparent>{renderContent()}</Workspace>
+          </div>
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              maxWidth: 'var(--layout-max-width)',
+              margin: '0 auto',
+              height: '100%',
+              minWidth: 0,
+            }}
+          >
             <Tabs tabs={NAV_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
-          ) : null}
-          <Workspace transparent={isMainTab}>{renderContent()}</Workspace>
-        </div>
+            <Workspace>{renderContent()}</Workspace>
+          </div>
+        )}
       </Content>
     </Layout>
   );

@@ -1,4 +1,5 @@
 import type { DragEvent } from 'react';
+import { clsx } from 'clsx';
 import { flexRender } from '@tanstack/react-table';
 import type { Header, Table } from '@tanstack/react-table';
 import styles from './grid-table.module.css';
@@ -8,6 +9,8 @@ export interface GridTableProps<TData> {
   withSelection?: boolean;
   /** Перетаскивание заголовков листовых колонок для смены порядка */
   draggableColumns?: boolean;
+  /** Разрешить overflow-x (модалки); иначе только вертикальный скролл — без лишней горизонтальной полосы */
+  horizontalScroll?: boolean;
 }
 
 function resolveHeaderTitle<TData>(header: Header<TData, unknown>): string {
@@ -33,11 +36,7 @@ function canDragLeafHeader<TData>(header: Header<TData, unknown>, draggable: boo
   return !(def.columns && def.columns.length > 0);
 }
 
-function handleDragStart<TData>(
-  e: DragEvent,
-  header: Header<TData, unknown>,
-  draggable: boolean,
-) {
+function handleDragStart<TData>(e: DragEvent, header: Header<TData, unknown>, draggable: boolean) {
   if (!canDragLeafHeader(header, draggable)) {
     return;
   }
@@ -82,11 +81,12 @@ export function GridTable<TData>({
   table,
   withSelection = true,
   draggableColumns = false,
+  horizontalScroll = false,
 }: GridTableProps<TData>) {
   if (!table) return null;
 
   return (
-    <div className={styles.shell}>
+    <div className={clsx(styles.shell, horizontalScroll && styles.shellHorizontalScroll)}>
       <table className={styles.table}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -98,7 +98,9 @@ export function GridTable<TData>({
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    data-name={(header.column.columnDef.meta as { isName?: boolean } | undefined)?.isName}
+                    data-name={
+                      (header.column.columnDef.meta as { isName?: boolean } | undefined)?.isName
+                    }
                     data-draggable-leaf={draggable ? 'true' : undefined}
                     style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
                     title={resolveHeaderTitle(header)}
@@ -137,7 +139,9 @@ export function GridTable<TData>({
               ) : null}
               {row.getVisibleCells().map((cell) => {
                 const columnDef = cell.column.columnDef;
-                const meta = columnDef.meta as { isNumeric?: boolean; isName?: boolean } | undefined;
+                const meta = columnDef.meta as
+                  | { isNumeric?: boolean; isName?: boolean }
+                  | undefined;
 
                 return (
                   <td
