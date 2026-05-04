@@ -1,4 +1,3 @@
-import { Tooltip } from 'antd';
 import { clsx } from 'clsx';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 
@@ -37,13 +36,12 @@ export function CellOverflowTooltip({ children }: { children: ReactNode }) {
   }, [measure, children]);
 
   return (
-    <Tooltip title={tip} mouseEnterDelay={0.35} destroyTooltipOnHide>
-      <span
-        ref={spanRef}
-        className={clsx(styles.cellInner, tip ? styles.cellInnerOverflow : undefined)}
-      >
-        {children}
-      </span>
-    </Tooltip>
+    <span
+      ref={spanRef}
+      title={tip}
+      className={clsx(styles.cellInner, tip ? styles.cellInnerOverflow : undefined)}
+    >
+      {children}
+    </span>
   );
 }

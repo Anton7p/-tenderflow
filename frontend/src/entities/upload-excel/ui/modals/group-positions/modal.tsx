@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Modal as SharedModal } from '@shared/ui';
 import { UploadExcelRowForm, UploadExcelTable } from '@entities/upload-excel/ui';
 import { roundMoney, useUploadExcelReadonlyTable } from '@entities/upload-excel/lib';
@@ -19,6 +19,7 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
   const { table } = useUploadExcelReadonlyTable({ data: rows });
   const initialFormValues = useMemo(() => buildInitialFormValues(rows), [rows]);
   const formId = 'group-positions-form';
+  const [formEpoch, setFormEpoch] = useState(0);
 
   const customTitle = (
     <div className={styles.modalHeader}>
@@ -35,7 +36,13 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
   );
 
   return (
-    <SharedModal open={isOpen} onClose={onCancel} width="1200px" height="700px">
+    <SharedModal
+      open={isOpen}
+      onClose={onCancel}
+      afterClose={() => setFormEpoch((prev) => prev + 1)}
+      width="1200px"
+      height="700px"
+    >
       {customTitle}
       <div className={styles.modalBodyCompact}>
         <div className={styles.modalTableWrap}>
@@ -53,13 +60,16 @@ export function GroupPositionsModal(props: GroupPositionsModalProps) {
           по выбранным строкам. После нажатия «Применить к группе» выбранные строки будут заменены
           одной итоговой позицией.
         </div>
-        <UploadExcelRowForm
-          formId={formId}
-          defaultValues={initialFormValues}
-          onSubmit={(values) => {
-            onApply?.(values);
-          }}
-        />
+        {isOpen ? (
+          <UploadExcelRowForm
+            key={`${formId}-${formEpoch}`}
+            formId={formId}
+            defaultValues={initialFormValues}
+            onSubmit={(values) => {
+              onApply?.(values);
+            }}
+          />
+        ) : null}
       </div>
     </SharedModal>
   );

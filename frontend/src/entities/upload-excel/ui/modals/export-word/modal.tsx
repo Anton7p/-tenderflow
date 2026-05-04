@@ -126,6 +126,7 @@ export function ExportWordModal(props: ExportWordModalProps) {
     <SharedModal
       open={isOpen}
       onClose={onCancel}
+      afterClose={() => form.resetFields()}
       width="1200px"
       height="700px"
       maskClosable={!loading}

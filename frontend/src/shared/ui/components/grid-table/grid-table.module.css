@@ -124,7 +124,7 @@
 }
 
 .cellInnerOverflow {
-  cursor: help;
+  cursor: pointer;
 }
 
 .table tbody tr:nth-child(even) td {
